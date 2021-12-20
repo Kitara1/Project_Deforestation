@@ -1,0 +1,47 @@
+---
+title: "Deforestation"
+author: "Martina Kofler & Mathieu Maréchal"
+date: "20/12/2021"
+output: powerpoint_presentation
+---
+
+
+## Research Question
+
+* Which countries are affected by deforestation?
+* How does this differ by years?
+* What are the causes of deforestation?
+* Which of these causes have the highest effect?
+
+### The potential causes examined
+
+* Amount of agricultural land,
+* Percentage of agricultural raw material exports and food export
+* Production/Extraction of source of energy
+* Percentage of population growth
+* Openness to trade
+* Soy production 
+
+## Most affected countries
+
+## Correlation plot
+
+
+## Analysis
+
+- Ordinary Least Square regression
+- Panel Data
+- Panel with Balanced Model
+- OLS per year
+
+## OLS per year
+
+
+
+## Final Result and critics
+
+
+
+
+
+
