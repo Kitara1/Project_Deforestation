@@ -2,7 +2,7 @@
 from Mathieu Marechal and Martina Kofler
 ![image](https://raw.githubusercontent.com/Kitara1/Project_Deforestation/main/picture/Deforestation.jpg)
 
-In order to run our report, follow these steps:
+## In order to run our report, follow these steps:
 
 1) First load those packages into Rstudio by running this command:
 
