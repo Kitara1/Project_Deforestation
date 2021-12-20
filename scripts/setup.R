@@ -8,7 +8,7 @@ packages <- c(
   "reshape2", "ggrepel", "gghighlight", "patchwork", "maps", "tmap", "scales", "leaflet", "sf", "sp", "spData", "highcharter", # for plotting
   "cowplot", "googleway", "ggplot2", "corrplot", "standardize", "plm", "psych", "VIF", "olsrr", "gplots", "plotly", "coefplot",
   "rnaturalearth", "rnaturalearthdata", "kableExtra", "jtools", "vtable", "Hmisc", "MASS",
-  "knitr", "kableExtra", "bookdown", "rmarkdown" # for the report
+  "knitr", "kableExtra", "bookdown", "rmarkdown", "ggstance" # for the report
 )
 
 purrr::walk(packages, library, character.only = TRUE)
