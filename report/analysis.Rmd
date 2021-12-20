@@ -309,7 +309,11 @@ Now that we have the significant coefficient according to the year, we can compa
 ```{r,message=F,warning=F,echo=FALSE}
 plot_summs(ols2000,ols2005,ols2010,ols2015,scale = T,model.names = c("2000","2005", "2010", "2015"))
 ```
-This is an important result as it shows only the coefficients that are significant at 95%. By taking the observations only in one year at a time, we avoid the problem of heteroskedasticity that we had before. Taking one model every five years from 2000 to 2015, we applied the AIC criteria to select the variable. Our four models have a good R-squared and have only significant coefficient. We can see that the coefficient doesn't vary much through years (except for coal and agriland) so that is a good point. The goal would have been to have all of them on the positive side but when we remove some then the model becomes unsignificant. The year 2005 seems to be a relevant one to be compared with the pooled version of the panel data (OLS) and the fixed effect model that we obtained.
+This is an important result as it shows only the coefficients that are significant at 95%. By taking the observations only in one year at a time, we avoid the problem of heteroskedasticity that we had before. Taking one model every five years from 2000 to 2015, we applied the AIC criteria to select the variable. Our four models have a good R-squared and have only significant coefficient. We can see that the coefficient doesn't vary much through years (except for coal and agriland) so that is a good point. The goal would have been to have all of them on the positive side but when we remove some then the model becomes unsignificant. 
+
+It is further important as we can see how these effects vary through time. For example we can observe that agriculural land had a much higher effect on deforestation in the years 2000 and 2005 than in the years 2010 and 2015. This imply that maybe we are deforesting less and less because of the agriculture as far as we go through time. This result should be take along the next years to see whether this intuition is good or not.
+
+The year 2005 seems to be a relevant one to be compared with the pooled version of the panel data (OLS) and the fixed effect model that we obtained.
 
 ## 7. Comparison of the Results
 
@@ -348,15 +352,17 @@ The R-squared is only very high in the ols2005 model. We can therefore conclude 
 
 ## 8. Answers to the research questions
 
-From the Balanced data set we can first capture the effect of agricultural land on deforestation. According to our results, an increase of 1 square kilometer of the agricultural land implies an increase of deforestation of 0.0027 square kilometers under the same conditions.
-Also if the soy production decreases by one dollar under ceteris paribus the deforestation increases by 0.0007024 sq km and the increase of one quad of gas decreases the deforestation by 747.1629343 sq km. Regarding the model the increase of one quad of petrol leads to an increase of 341.7205498 deforestation in sq km. 
+After evaluating all these different methods, we end up chosing to first interpret the Balanced model as he seems to be the best model as he treats the heteroskedasticity problem and takes all year going from 1996 to 2015 into account. Even if its R-squared is low, we have reason to think that it is our best result.
 
-We can make an estimate for the amount of deforestation for a country if we know the amount of agricultural land, soy production in thousand dollar, gas production in quad and petrol production in quad. 
+From the Balanced data set we can first capture the effect of agricultural land on deforestation. According to our results, an increase of 1 square kilometer of the agricultural land implies an increase of deforestation of 0.0027 square kilometers ceteris paribus. Also if the soy production decreases by one dollar under all other factors being constant  the deforestation increases by 0.0007024 sq km and the increase of one quad of gas decreases the deforestation by 747.1629343 sq km. Regarding the model the increase of one quad of petrol leads to an increase of 341.7205498 deforestation in sq km. A decrease in deforestation means that we increase the forest area. It makes then no sense. 
+
 The estimate amount of deforestation in sq km can be calculated by this formula:
 
 $$
 Deforestation = agriculturalland * 0.0027167 - soyproduction * 0.0007024 + gas * 747.1629343 + petrol *341.7205498
 $$
-Because the velue of the R-squared  is 0.43 with this model we can just explain approximately  43% of observed variation.
+We then can make an estimate for the amount of deforestation for a country if we know the amount of agricultural land, soy production in thousand dollar, gas production in quad and petrol production in quad. Nevertheless we have to keep in mind that the value of the R-squared  is 0.43 with this model we can just explain approximately  43% of observed variation.
+
+To answer now our research question we can say that agricultural land as well as the soy production and the extractions of minerals production were the most significant factors causing deforestation from the year 1990 until 2017.
 
 
