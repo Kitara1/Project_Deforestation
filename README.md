@@ -13,7 +13,7 @@ install.packages(c(
   "reshape2","ggrepel", "gghighlight", "patchwork", "maps", "tmap", "scales", "leaflet", "sf", "sp", "spData", "highcharter",
   "cowplot", "googleway", "ggplot2","corrplot","standardize","plm","psych","VIF","olsrr","gplots","plotly","coefplot",
   "rnaturalearth", "rnaturalearthdata","kableExtra","jtools","vtable","Hmisc", "MASS",
-  "knitr", "kableExtra", "bookdown", "rmarkdown" 
+  "knitr", "kableExtra", "bookdown", "rmarkdown", "ggstance"
 ))
  
 2) Then you have to open our "dsfba_project.Rproj" file. 
