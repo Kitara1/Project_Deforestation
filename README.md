@@ -5,6 +5,8 @@ from Mathieu Marechal and Martina Kofler
 In order to run our report, follow these steps:
 
 1) First load those packages into Rstudio by running this command:
+
+
 install.packages(
   "here", # for the project's organization
   "tidyverse", "lubridate","dplyr","DT",# for wrangling
