@@ -1,0 +1,23 @@
+# Introduction
+
+## Overview and Motivation
+
+According to the World Wildlife Fund forests cover more than 30% of the Earth's land surface and can provide food, medicine and fuel for more than a billion people. 
+They are a resource, but they are also large, undeveloped land that can be converted for purposes such as agriculture and grazing. According to National Geographic in North America, about half the forests in the eastern part of the continent were cut down for timber and farming between the 1600s and late 1800s, today, most deforestation is happening in the tropics. 
+Negative effects of deforestation are the loss of animal and plant species due to their loss of habitat, the increase of greenhouse gases and lower water levels.Trees are bringing humidity to the land, by decreasing the trees numbers also the humidity in the land of the region decreases this leads to a higher risk of forest fire.
+Because the negative effects of deforestation are substantive we decided to focus in our project on the areas that are affected from deforestation the cause of deforestation.
+
+
+## Related Work
+
+Some studies also identified the causes of deforestation, like the effect of agriculture. According to Arima et al. (2011) a 10% reduction of soy in old pasture areas would have decreased deforestation by 40%. Pfaff et al. (2007) investigate links between road networks and deforestation, Carr and Burgdorfer (2013) investigate the implications of rural populations and other authors like Ehrhardt-Martinez, Crenshaw, and Jenkins (2002) investigate links between environmental Kuznets curve and deforestation. Faria and Almeida (2016) explore to impact of openness to trade and Gosh H. showed that mining is one of the main causes responsible for deforestation in India.
+
+## Research questions
+
+Therefore we developed the following research questions:
+Which countries are affected by the deforestation?
+How does this differ by year?
+What are the causes of deforestation?
+Which of these causes have the highest effect?
+
+

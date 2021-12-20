@@ -1,0 +1,408 @@
+# Data
+
+```{r, echo = FALSE,warning=F, message = FALSE}
+source(here::here("scripts/setup.R"))
+```
+
+## Sources
+
+* AgriLandData : <https://data.worldbank.org/indicator/AG.LND.AGRI.K2>
+
+* ForestAreaData : <https://data.worldbank.org/indicator/AG.LND.FRST.K2>
+
+* AgriVarData : <https://data.worldbank.org/topic/trade>
+
+* ResourcesExtractionData : <https://www.eia.gov/international/data/world>
+
+* PopGrowth : <https://data.worldbank.org/indicator/SP.POP.GROW>
+
+* TradeOpenessData : <https://ourworldindata.org/grapher/trade-openness>
+
+* SoybeansData : <https://www.fao.org/faostat/en/#search/soy>
+
+* LandAreaData : <https://data.worldbank.org/indicator/AG.LND.TOTL.K2>
+
+<br>
+
+
+## Index for the different variables
+
+In our analysis we'll be using many variables. Some of them are directly taken from the original data sets and some of them are derived from existing variables. The aim of this "Data" section is to tidy one by one our data set and extract the variables we are interested in. Here we'll state an index to easily find where we treated each variable of our final "merged" data set: 
+
+1) Agricultural land
+
+2) Change in agricultural Land
+
+3) Forest area
+
+4) Deforestation
+
+5) Agricultural exports
+
+6) Total land area
+
+7) Production / Extraction of sources of energy
+
+8) Population growth
+
+9) Openness to trade
+
+10) Soybeans production
+
+11) Merged Data Set
+
+<br>
+
+## 1) Agricultural Land
+
+
+The "AgriLandData" data set shows the total area of agricultural land in square km per country/region for the years between 1960 and 2020. In this project we will limit our analysis the years starting from 2001. This data set is taken across 266 countries.
+
+<br>
+
+```{r,message=F,warning=F,echo=FALSE}
+options(scipen=999)
+AgriLandData <- read.csv(file = here::here("data/AgriculturalLand.csv"),  header = F) %>% as_tibble 
+
+
+AgriLandData <- AgriLandData[-(1:2),]
+colnames(AgriLandData)=AgriLandData[1,]
+AgriLandData <- AgriLandData[-1,-(2:4)]
+AgriLandData <- AgriLandData  %>% 
+pivot_longer(as.character(1960:2020),
+names_to = "Year",
+values_to = "AgriLand")
+AgriLandData <- AgriLandData[,-2]
+AgriLandData=filter(AgriLandData, Year>1979)
+colnames(AgriLandData)[1] <- "Country"
+
+AgriLandData[1:7,]%>%
+  kbl() %>%
+    kable_classic(full_width = T, html_font = "Cambria")%>% 
+    kable_styling(latex_options = "striped")
+```
+<br>
+
+## 2) Change in Agricultural Land
+
+To know how the area of agricultural land changed over time we created two new columns that contain information about the change to the year before, one in square km and one in percentage.
+<br>
+```{r,message=F,warning=F,echo=FALSE}
+AgriLandData['Change agricultural land'] <- NA
+for(i in 1:(nrow(AgriLandData)-1)) {
+if (AgriLandData[i,1]==AgriLandData[i+1,1]){
+AgriLandData[i,4]=AgriLandData[i+1,3]-AgriLandData[i,3]
+}
+}
+AgriLandData['Change agricultural land %'] <- NA
+for(i in 1:nrow(AgriLandData)) {
+AgriLandData[i,5]=AgriLandData[i,4]/AgriLandData[i,3]*100
+}
+AgriLandData[43:50,]%>%
+  kbl() %>%
+    kable_classic(full_width = T, html_font = "Cambria")%>% 
+  kable_styling(latex_options = "striped")
+
+```
+<br>
+
+## 3) Forest Area
+
+The *ForestArea" data set shows the total forest area in square km per country/region for the years between 1960 and 2020. In this project we are just interested in the years starting from 2001.
+<br>
+
+```{r,message=F,warning=F,echo=FALSE}
+ForestAreaData = read.csv(file = here::here("data/ForestArea.csv"),  header = F, sep=",") %>% as_tibble
+ForestAreaData= ForestAreaData[-(1:2),]
+colnames(ForestAreaData)=ForestAreaData[1,]
+ForestAreaData <- ForestAreaData[-1,-(2:4)]
+
+ForestAreaData <- ForestAreaData  %>% 
+pivot_longer(as.character(1960:2020),
+names_to = "Year",
+values_to = "ForestArea")
+ForestAreaData <- ForestAreaData[,-2]
+ForestAreaData=filter(ForestAreaData, Year>1979)
+colnames(ForestAreaData)[1] <- "Country"
+
+ForestAreaData[52:59,]%>%
+  kbl() %>%
+    kable_classic(full_width = T, html_font = "Cambria")%>% 
+  kable_styling(latex_options = "striped")
+```
+
+<br>
+
+## 4) Deforestation
+
+Using the "ForestAreaData" data set, we created two new columns that contain information about the change to the year before, one in square km and one in percentage, namely the "Deforestation" variable and the "Deforestation %"
+
+<br>
+```{r,message=F,warning=F,echo=FALSE}
+ForestAreaData['Deforestation'] <- NA
+for(i in 1:(nrow(ForestAreaData)-1)) {
+  if (ForestAreaData[i,1]==ForestAreaData[i+1,1]){
+    ForestAreaData[i,4]=ForestAreaData[i+1,3]-ForestAreaData[i,3]
+  }
+}
+ForestAreaData['Deforestation %'] <- NA
+for(i in 1:nrow(ForestAreaData)) {
+ForestAreaData[i,5]=ForestAreaData[i,4]/ForestAreaData[i,3]
+}
+ForestAreaData[52:59,]%>%
+  kbl() %>%
+    kable_classic(full_width = T, html_font = "Cambria")%>% 
+  kable_styling(latex_options = "striped")
+```
+
+<br>
+
+## 5) Agricultural exports
+
+The data  set we took includes information about 149 indicators for 237 countries from 1960 to 2020. To get an impression about the data we show the first 7 rows and 7 columns from the data set.
+
+<br>
+
+```{r,message=F,warning=F,echo=FALSE}
+AgriVarData <-read.csv(file = here::here("data/AgriVariables.csv"),  header = F, sep=",") %>% as_tibble
+
+AgriVarData= AgriVarData[-(1:2),]
+colnames(AgriVarData)=AgriVarData[1,]
+AgriVarData <- AgriVarData[-1,-c(2,4)]
+colnames(AgriVarData)[1] <- "Country"
+
+AgriVarData[10:17,1:7]%>%
+  kbl() %>%
+    kable_classic(full_width = T, html_font = "Cambria")%>% 
+  kable_styling(latex_options = "striped")
+```
+
+Before selecting the variables we need we changed the structure of the data set such that it has the year and the different indicator names as column names and we also just selected data from 2000 and above.
+
+```{r,message=F,warning=F,echo=FALSE}
+AgriVarData <- AgriVarData  %>%
+pivot_longer(as.character(1960:2020),names_to = "Year", values_to = "values")
+
+AgriVarData=AgriVarData %>%
+pivot_wider(names_from = `Indicator Name`, values_from = `values`)
+AgriVarData=filter(AgriVarData, Year>1979)
+AgriVarData=AgriVarData[,-c(2)]
+
+AgriVarData[1:7,1:6]%>%
+  kbl() %>%
+    kable_classic(full_width = T, html_font = "Cambria")%>% 
+  kable_styling(latex_options = "striped")
+```
+
+From all these variables just two are of interest for our project. Therefore we selected just these indicators and created a new data set for each of them.
+The result was:
+
+```{r,message=F,warning=F,echo=FALSE}
+MerchanExp=subset(AgriVarData, select = c(1, 2, 21))
+MerchanExp=MerchanExp%>% drop_na()
+MerchanExp <- MerchanExp %>%                   # Using dplyr functions
+ mutate_if(is.numeric,
+            round,
+           digits = 2)
+MerchanExp[200:207,]%>%
+  kbl() %>%
+    kable_classic(full_width = T, html_font = "Cambria")%>% 
+  kable_styling(latex_options = "striped")
+```
+<br>
+
+A data set that shows the percentage of food exports from total merchandise exports in US$ per country and year.
+
+```{r,message=F,warning=F,echo=FALSE}
+FoodExp=subset(AgriVarData, select = c(1, 2, 28))
+FoodExp=FoodExp%>% drop_na()
+FoodExp[1:7,]%>%
+  kbl() %>%
+    kable_classic(full_width = T, html_font = "Cambria")%>% 
+  kable_styling(latex_options = "striped")
+```
+
+And now we'll also take a data set showing the percentage agricultural raw material exports from total merchandise exports in US$ per country and year.
+
+```{r,message=F,warning=F,echo=FALSE}
+AgriRawMaterialExp=subset(AgriVarData, select = c(1, 2, 29))
+AgriRawMaterialExp=AgriRawMaterialExp%>% drop_na() 
+AgriRawMaterialExp[1:7,]%>%
+  
+  kbl() %>%
+  kable_classic(full_width = T, html_font = "Cambria")%>% 
+  kable_styling(latex_options = "striped")
+```
+
+<br>
+
+
+## 6) Total Land Area
+
+This data set shows how much squared kilometer every country has. This will make it possible identify how many percent of this area is forest and how many percent of the land is agricultural land.
+<br>
+```{r,message=F,warning=F,echo=FALSE}
+LandAreaData=read.csv(file = here::here("data/LandArea.csv"), header = F, sep=",") %>% as_tibble()
+LandAreaData= LandAreaData[-(1:2),]
+colnames(LandAreaData)=LandAreaData[1,]
+colnames(LandAreaData)[1] <- "Country"
+LandAreaData <- LandAreaData[-1,]
+LandAreaData <- LandAreaData  %>%
+pivot_longer(as.character(1960:2020),names_to = "Year",values_to = "Land Area in sq km")
+LandArea=subset(LandAreaData, select= c(1, 6, 7))
+LandArea=filter(LandArea, Year>1979)
+
+LandArea[1:7,]%>%
+  kbl() %>%
+  kable_classic(full_width = T, html_font = "Cambria")  %>% 
+  kable_styling(latex_options = "striped")
+
+```
+
+<br>
+
+## 7) Extraction of Minerals Data
+
+
+This data set contains the different amount of extraction of different sources of energy taken worldwide. Although it was a difficult data set to find for the whole world, it was also a hard one to tidy and here is why. 
+
+After running the four first line of code in order to deleat the unnecessary information lines and name the columns to be able to use it, we end up to this stage:
+ 
+
+```{r,message=F,warning=F,echo=FALSE}
+ExtractionData <- read.csv(file = here::here("data/ExtractionProd.csv"),  header = F, sep=",") %>% as_tibble
+
+ExtractionData <- ExtractionData[-1,-1]
+colnames(ExtractionData)=ExtractionData[1,]
+ExtractionData <- ExtractionData[-1,]
+colnames(ExtractionData)[1]="ExtractVar"
+
+ExtractionData[25:32,1:5] %>%
+  kbl() %>%
+  kable_classic(full_width = T, html_font = "Cambria")%>% 
+  kable_styling(latex_options = "striped") 
+
+```
+
+Now we can see our problem: The name of the country appear as a title that is in the same column as the variables names we need. We are therefore at this stage unable to pivot our tibble. In order to solve this problem we created a new column "Country" where we take only one row every eights of the first column and the copy it for all the variable. Then we deleted the row corresponding at the country name that is now store in the column "Country" and obtain something like this:
+
+<br>  
+```{r,message=F,warning=F,echo=FALSE}
+ExtractionData['Country'] <- NA
+for(i in 1:nrow(ExtractionData)) {
+  if (i%%8==1 | i==1){
+    j <- 1
+    while (j < 8){
+      ExtractionData[j+i,42]=ExtractionData[i,1]
+      j= j+1
+    }
+  }
+}
+
+for(i in 1:nrow(ExtractionData)) {
+  if (i%%7==1 | i==1){
+    ExtractionData <- ExtractionData[-i,]
+  }
+}
+```
+<br>
+Now we are finally able to pivot our tibble to have a tidy data set usable for the rest of our analysis:
+  
+```{r,message=F,warning=F,echo=FALSE}
+ExtractionData <- ExtractionData  %>% 
+  pivot_longer(as.character(1980:2019),
+               names_to = "Year",
+               values_to = "ExtractProd")
+
+ExtractionData <- ExtractionData  %>% 
+  pivot_wider(names_from = "ExtractVar", values_from = "ExtractProd")
+
+
+ExtractionData[1:7,]%>%
+  kbl() %>%
+  kable_classic(full_width = T, html_font = "Cambria")%>% 
+  kable_styling(latex_options = "striped")
+
+```
+
+<br>
+
+## 8) Population Growth Data
+
+This data aims to measure the population growth derived from the total population. We'll be using this variable to determine a potential link with the deforestation. In order to tidy it we got rid of the unnecessary lines and once we had our column name set to the years, we pivoted our tibble to have all years as one column namely one variable. The data is taken as percentage of growth compare to the previous year and are taken from year 1960 to 2020 across 266 different countries.
+<br>
+```{r,message=F,warning=F,echo=FALSE}
+PopGrowthData=read.csv(file = here::here("data/PopGrowth.csv"), header = F, sep=",") %>% as_tibble()
+PopGrowthData= PopGrowthData[-(1:2),]
+colnames(PopGrowthData)=PopGrowthData[1,]
+PopGrowthData <- PopGrowthData[-1,]
+PopGrowthData=PopGrowthData %>%
+pivot_longer(as.character(1960:2020),names_to = "Year",values_to = "PopulationGrowth")
+PopGrowthData=subset(PopGrowthData, select = -c(`Country Code`,`Indicator Name`, `Indicator Code`) )
+PopGrowthData=filter(PopGrowthData, Year>1979)
+colnames(PopGrowthData)[1] <- "Country"
+PopGrowthData=PopGrowthData[,-2]
+
+PopGrowthData[1:7,]%>%
+  kbl() %>%
+  kable_classic(full_width = T, html_font = "Cambria")%>% 
+  kable_styling(latex_options = "striped")
+```
+<br>
+
+## 9) Openness to Trade Data
+
+In order to capture whether a country is open to trade or not, the best proxy variable that we found we to take the ratio of export and import over de GDP, again taken each year for each country.
+
+<br>
+```{r,message=F,warning=F,echo=FALSE}
+TradeOpen <- read.csv(file = here::here("data/trade-openness.csv"), header= TRUE, sep=",") %>% as_tibble()
+TradeOpen <- subset(TradeOpen, select = -c(`Code`))
+TradeOpen=filter(TradeOpen, Year>1979)
+colnames(TradeOpen)[1] <- "Country"
+colnames(TradeOpen)[3] <- "Export/Import of GDP"
+TradeOpen[1:7,]%>%
+  kbl() %>%
+  kable_classic(full_width = T, html_font = "Cambria")%>% 
+  kable_styling(latex_options = "striped")
+```
+<br>
+
+## 10) Soybeans dataset
+
+This data set represent the amount of soybeans produced per year for each country.
+<br>
+```{r,message=F,warning=F,echo=FALSE}
+Soybeans <- read_csv(file = here::here("data/Soybeans.csv"))
+Soybeans=subset(Soybeans, select = c(4,6, 10, 12))
+Soybeans= filter(Soybeans, Year>1979)
+Soybeans=Soybeans %>% rename("Gross Production Value Soybeans"=Value)
+colnames(Soybeans)[1] <- "Country"
+Soybeans<-subset(Soybeans,Soybeans$Element=="Gross Production Value (current thousand US$)")
+Soybeans=subset(Soybeans, select = -c(`Element`) )
+Soybeans[1:7,]%>%
+  kbl() %>%
+  kable_classic(full_width = T, html_font = "Cambria")%>% 
+  kable_styling(latex_options = "striped")
+```
+<br>
+
+## 11) Merged Data
+
+Finally we are able to merge our different variables into a merged data set. The countries and years corresponding to each observation are taken as primary key for this data set.
+<br>
+
+```{r,message=F,warning=F,echo=FALSE}
+merged= merge(merge(merge(merge(merge(merge(merge(merge(AgriLandData, AgriRawMaterialExp), FoodExp), ForestAreaData), LandArea), PopGrowthData), Soybeans), TradeOpen), ExtractionData)
+merged[1:7,]%>%
+  kbl() %>%
+  kable_classic(full_width = T, html_font = "Cambria")%>% 
+  kable_styling(latex_options = "striped")
+for (i  in 15:21){
+  merged[,i]=as.numeric(merged[,i])
+}
+colnames(merged)[3:21] <-c( "agriland","chagri", "chagrip", "agriexp", "foodexp", "forest", "deforest", "deforestp", "land", "pop", "soy", "opentr", "prod", "coal", "gas", "petrol", "nuclrew", "nuc", "rew")
+
+```
+
+<br>

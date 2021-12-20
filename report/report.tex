@@ -1,0 +1,578 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Deforestation},
+  pdfauthor={Mathieu Maréchal \& Martina Kofler},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\title{Deforestation}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{Data Science for Business Analytics Project}
+\author{Mathieu Maréchal \& Martina Kofler}
+\date{14 novembre, 2021}
+
+\begin{document}
+\maketitle
+
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
+
+\begin{itemize}
+\tightlist
+\item
+  Overview and Motivation
+\item
+  Related Work
+\item
+  Research questions
+\end{itemize}
+
+\hypertarget{data}{%
+\section{Data}\label{data}}
+
+\hypertarget{dataset-index-and-urls}{%
+\subsection{Dataset index and URLs:}\label{dataset-index-and-urls}}
+
+\begin{itemize}
+\item
+  AgriLandData :
+  \url{https://data.worldbank.org/indicator/AG.LND.AGRI.ZS}
+\item
+  ForestAreaData :
+  \url{https://data.worldbank.org/indicator/AG.LND.FRST.K2}
+\item
+  PopGrowth : \url{https://data.worldbank.org/indicator/SP.POP.GROWL}
+\item
+  AgriVarData : \url{https://data.worldbank.org/topic/trade}
+\item
+  SoybeansData : \url{https://www.fao.org/faostat/en/\#search/soy}
+\item
+  TradeOpenessData :
+  \url{https://ourworldindata.org/grapher/trade-openness}
+\item
+  ResourcesExtractionData :
+  \url{https://www.eia.gov/international/data/world}
+\item
+  LandAreaData :
+  \url{https://data.worldbank.org/indicator/AG.LND.TOTL.K2}
+\end{itemize}
+
+\hypertarget{agricultural-land}{%
+\subsection{Agricultural Land}\label{agricultural-land}}
+
+The AgriLandData dataset shows the total area of agricultural land in
+square km per country/region for the years between 1960 and 2020. In
+this project we are just interested in the years starting from 2000.
+
+\begin{tabu} to \linewidth {>{\raggedright}X>{\raggedright}X>{\raggedleft}X}
+\hline
+Country & Year & AgriLand\\
+\hline
+Aruba & 2000 & 11.1\\
+\hline
+Aruba & 2001 & 11.1\\
+\hline
+Aruba & 2002 & 11.1\\
+\hline
+Aruba & 2003 & 11.1\\
+\hline
+Aruba & 2004 & 11.1\\
+\hline
+Aruba & 2005 & 11.1\\
+\hline
+Aruba & 2006 & 11.1\\
+\hline
+\end{tabu}
+
+To know how the area of agricultural land changed over time we created
+two new columns that contain information about the change to the year
+before, one in square km and one in percentage.
+
+\begin{tabu} to \linewidth {>{\raggedright}X>{\raggedright}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X}
+\hline
+Country & Year & AgriLand & Change agricultural land & Change agricultural land \%\\
+\hline
+Aruba & 2019 & NA & NA & NA\\
+\hline
+Aruba & 2020 & NA & NA & NA\\
+\hline
+Africa Eastern and Southern & 2000 & 42.5 & NA & NA\\
+\hline
+Africa Eastern and Southern & 2001 & 42.6 & -0.126 & -0.295\\
+\hline
+Africa Eastern and Southern & 2002 & 42.8 & -0.122 & -0.286\\
+\hline
+Africa Eastern and Southern & 2003 & 43.0 & -0.233 & -0.545\\
+\hline
+Africa Eastern and Southern & 2004 & 42.8 & 0.163 & 0.380\\
+\hline
+Africa Eastern and Southern & 2005 & 43.0 & -0.126 & -0.293\\
+\hline
+\end{tabu}
+
+\hypertarget{forest-area}{%
+\subsection{Forest Area}\label{forest-area}}
+
+The AgriLandData dataset shows the total forest area in square km per
+country/region for the years between 1960 and 2020. In this project we
+are just interested in the years starting from 2000.
+
+\begin{tabu} to \linewidth {>{\raggedright}X>{\raggedright}X>{\raggedleft}X}
+\hline
+Country & Year & ForestArea\\
+\hline
+Africa Western and Central & 2016 & 20.2\\
+\hline
+Africa Western and Central & 2017 & 20.1\\
+\hline
+Africa Western and Central & 2018 & 20.0\\
+\hline
+Africa Western and Central & 2019 & 19.9\\
+\hline
+Africa Western and Central & 2020 & 19.8\\
+\hline
+Angola & 2000 & 62.3\\
+\hline
+Angola & 2001 & 61.9\\
+\hline
+Angola & 2002 & 61.4\\
+\hline
+\end{tabu}
+
+Also for this dataset we created two new columns that contain
+information about the change to the year before, one in square km and
+one in percentage.
+
+\begin{tabu} to \linewidth {>{\raggedright}X>{\raggedright}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X}
+\hline
+Country & Year & ForestArea & Deforestation & Deforestation \%\\
+\hline
+Africa Western and Central & 2016 & 20.2 & 0.082 & 0.403\\
+\hline
+Africa Western and Central & 2017 & 20.1 & 0.081 & 0.403\\
+\hline
+Africa Western and Central & 2018 & 20.0 & 0.085 & 0.425\\
+\hline
+Africa Western and Central & 2019 & 19.9 & 0.085 & 0.425\\
+\hline
+Africa Western and Central & 2020 & 19.8 & 0.084 & 0.424\\
+\hline
+Angola & 2000 & 62.3 & NA & NA\\
+\hline
+Angola & 2001 & 61.9 & 0.445 & 0.714\\
+\hline
+Angola & 2002 & 61.4 & 0.445 & 0.719\\
+\hline
+\end{tabu}
+
+\hypertarget{agricultural-raw-material-exports-merchandise-exports-food-exports}{%
+\subsection{Agricultural raw material exports, Merchandise Exports, Food
+exports}\label{agricultural-raw-material-exports-merchandise-exports-food-exports}}
+
+The dataset we took includes information about 149 indicators for 237
+countries from 1960 to 2020. To get an impression about the data we show
+the 7 rows and 7 columns from the dataset.
+
+\begin{tabu} to \linewidth {>{\raggedright}X>{\raggedright}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X}
+\hline
+Country & Indicator Name & 1960 & 1961 & 1962 & 1963 & 1964\\
+\hline
+Aruba & Merchandise exports by the reporting economy, residual (\% of total merchandise exports) & NA & NA & NA & NA & NA\\
+\hline
+Aruba & Merchandise exports to low- and middle-income economies in Sub-Saharan Africa (\% of total merchandise exports) & NA & NA & NA & NA & NA\\
+\hline
+Aruba & Merchandise exports to low- and middle-income economies in South Asia (\% of total merchandise exports) & NA & NA & NA & NA & NA\\
+\hline
+Aruba & Merchandise exports to low- and middle-income economies in Middle East \& North Africa (\% of total merchandise exports) & NA & NA & NA & NA & NA\\
+\hline
+Aruba & Merchandise exports to low- and middle-income economies in Latin America \& the Caribbean (\% of total merchandise exports) & NA & NA & NA & NA & NA\\
+\hline
+Aruba & Merchandise exports to low- and middle-income economies in Europe \& Central Asia (\% of total merchandise exports) & NA & NA & NA & NA & NA\\
+\hline
+Aruba & Merchandise exports to low- and middle-income economies in East Asia \& Pacific (\% of total merchandise exports) & NA & NA & NA & NA & NA\\
+\hline
+Aruba & Merchandise exports to low- and middle-income economies outside region (\% of total merchandise exports) & NA & NA & NA & NA & NA\\
+\hline
+\end{tabu}
+
+Before selecting the variables we need we changed the structure of the
+dataset so that it has the year and the different indicator names as
+column names and we also just selected data from 2000 and above.
+
+\begin{tabu} to \linewidth {>{\raggedright}X>{\raggedright}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X}
+\hline
+Country & Year & Travel services (\% of commercial service exports) & Transport services (\% of commercial service exports) & High-technology exports (\% of manufactured exports)\\
+\hline
+Aruba & 2000 & 52.1 & 5.32 & NA\\
+\hline
+Aruba & 2001 & 45.3 & 2.86 & NA\\
+\hline
+Aruba & 2002 & 69.1 & 2.96 & NA\\
+\hline
+Aruba & 2003 & 53.9 & 2.44 & NA\\
+\hline
+Aruba & 2004 & 85.4 & 4.29 & NA\\
+\hline
+Aruba & 2005 & 85.0 & 4.39 & NA\\
+\hline
+Aruba & 2006 & 82.5 & 4.15 & NA\\
+\hline
+\end{tabu}
+
+Form all this variables just two are of interest for our project.
+Therefore we selected just these indicators and created a new dataset
+for each of them. The result was:
+
+A dataset that shows the percentage of food exports from total
+merchandise exports in US\$ per country and year
+
+\begin{tabu} to \linewidth {>{\raggedright}X>{\raggedright}X>{\raggedleft}X}
+\hline
+Country & Year & Food exports (\% of merchandise exports)\\
+\hline
+Aruba & 2000 & 49.96\\
+\hline
+Aruba & 2001 & 45.08\\
+\hline
+Aruba & 2002 & 44.09\\
+\hline
+Aruba & 2003 & 46.87\\
+\hline
+Aruba & 2004 & 35.86\\
+\hline
+Aruba & 2005 & 1.18\\
+\hline
+Aruba & 2006 & 34.38\\
+\hline
+\end{tabu}
+
+and a dataset that shows the percentage agricultural raw material
+exports from total merchandise exports in US\$ per country and year.
+
+\begin{tabu} to \linewidth {>{\raggedright}X>{\raggedright}X>{\raggedleft}X}
+\hline
+Country & Year & Agricultural raw materials exports (\% of merchandise exports)\\
+\hline
+Aruba & 2000 & 0.737\\
+\hline
+Aruba & 2001 & 0.549\\
+\hline
+Aruba & 2002 & 0.993\\
+\hline
+Aruba & 2003 & 1.172\\
+\hline
+Aruba & 2004 & 1.249\\
+\hline
+Aruba & 2005 & 0.317\\
+\hline
+Aruba & 2006 & 1.096\\
+\hline
+\end{tabu}
+
+\hypertarget{landarea}{%
+\subsection{LandArea}\label{landarea}}
+
+This dataset shows how much squared kilometer every country has, this
+makes it possible identify how much of percent of this area is forest
+and how much of percent of the land is agricultural land.
+
+\begin{tabu} to \linewidth {>{\raggedright}X>{\raggedright}X>{\raggedleft}X}
+\hline
+Country & Year & Land Area in sq km\\
+\hline
+Aruba & 2000 & 180\\
+\hline
+Aruba & 2001 & 180\\
+\hline
+Aruba & 2002 & 180\\
+\hline
+Aruba & 2003 & 180\\
+\hline
+Aruba & 2004 & 180\\
+\hline
+Aruba & 2005 & 180\\
+\hline
+Aruba & 2006 & 180\\
+\hline
+\end{tabu}
+
+\hypertarget{extraction-of-minerals-data}{%
+\subsection{Extraction of Minerals
+Data}\label{extraction-of-minerals-data}}
+
+This data set contains the different amount of extraction of different
+sources of energy taken worldwide. Although it was a difficult data set
+to find for the whole world, it was also a hard one to tidy and here is
+why.
+
+After running the four first line of code in order to deleat the
+unnecessary information lines and name the columns to be able to use it,
+we end up to this stage:
+
+\begin{tabu} to \linewidth {>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X}
+\hline
+ExtractVar & 1980 & 1981 & 1982 & 1983 & 1984 & 1985 & 1986 & 1987 & 1988 & 1989 & 1990 & 1991 & 1992 & 1993 & 1994 & 1995 & 1996 & 1997 & 1998 & 1999 & 2000 & 2001 & 2002 & 2003 & 2004 & 2005 & 2006 & 2007 & 2008 & 2009 & 2010 & 2011 & 2012 & 2013 & 2014 & 2015 & 2016 & 2017 & 2018 & 2019\\
+\hline
+Algeria &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \\
+\hline
+Production (quad Btu) & 2.803017355026457 & 3.0375368604701833 & 3.224933778884667 & 3.6064004828010217 & 3.8591760033483915 & 3.907465537569512 & 3.9683247789434253 & 4.21808633368004 & 4.297753784176673 & 4.502301610062132 & 4.753325721703916 & 4.916138909177983 & 5.031036030666051 & 4.88422507831684 & 4.735645919005672 & 5.048140212281036 & 5.2483061400986335 & 5.592121473752019 & 5.74869236165099 & 6.019446853227404 & 6.190571221848181 & 6.170157236109468 & 6.390558968392507 & 6.789041156494967 & 6.901127019254425 & 7.479709411519275 & 7.418333560428764 & 7.129614220676974 & 7.1784030068807825 & 6.944768814359772 & 6.927837879172395 & 6.828492246382395 & 6.999409831111563 & 6.5104186447871735 & 6.561760333289481 & 6.696192522564449 & 6.910709728136037 & 6.763856727052585 & 6.688078779874529 & \\
+\hline
+Coal (quad Btu) & 0.0000759200610490114 & 0.00024041352665520277 & 0.00040490699226139416 & 0.0005694004578675855 & 0.0005757271296216698 & 0.0005820538013757541 & 0.00027837355717970846 & 0.00024041352665520277 & 0.0002530670997420472 & 0.00022776029793637214 & 0.0002720471150043 & 0.0003163339320722279 & 0.0003796007644024087 & 0.0005061344290627702 & 0.0005820538013757541 & 0.0005567478030954444 & 0.0003036807033533973 & 0.00027837355717970846 & 0.00013918700816853007 & 0.000022776224935511447 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+\hline
+Natural gas (quad Btu) & 0.48498 & 0.91096 & 1.11156 & 1.55052 & 1.6048 & 1.6048 & 1.5694 & 1.7995 & 1.9293 & 2.01662 & 2.10866 & 2.28094 & 2.32528086 & 2.24443788 & 2.1319296 & 2.421124 & 2.47277431065 & 2.7422203445 & 2.93525036875 & 3.24091440715 & 3.3129524162 & 3.1410163946 & 3.15415039625 & 3.2118604035 & 3.18997040075 & 3.551553446175 & 3.470560436 & 3.18139676631 & 3.24432936765 & 3.12573283953 & 3.1732582833 & 3.10413743451 & 3.24241663662 & 2.98716080544 & 3.12393982635 & 3.1143761712 & 3.517358922693 & 3.5067077266554 & 3.541624664238 & 3.294896139756\\
+\hline
+Petroleum and other liquids (quad Btu) & 2.3153852101494885 & 2.122552459995088 & 2.1080136736977853 & 2.052859918102554 & 2.2484132362187697 & 2.2954078507681364 & 2.3960662433862456 & 2.413230191153384 & 2.366332073076931 & 2.482710233764195 & 2.6429998065889118 & 2.6318561352459104 & 2.7033381959016487 & 2.635683222887777 & 2.6014424412042962 & 2.6244898724779406 & 2.7738425887452807 & 2.8488669936948394 & 2.8111308448928214 & 2.7764542438524678 & 2.877078152648181 & 3.028438197509468 & 3.2358388841425074 & 3.5745280029949673 & 3.708672650504426 & 3.922666514344275 & 3.9456306204287643 & 3.946003438366974 & 3.9313145192307823 & 3.8160786948297725 & 3.752900588272395 & 3.719524988272395 & 3.7511303868915626 & 3.520136978247174 & 3.4354230359394813 & 3.57975685236445 & 3.3902874432030368 & 3.251294691677185 & 3.1398097433165293 & 3.1274413947036668\\
+\hline
+Nuclear, renewables, and other (quad Btu) & 0.00257622481592 & 0.00378398694844 & 0.00495519819462 & 0.0024511642406 & 0.00538704 & 0.006675633 & 0.002580162 & 0.005115729 & 0.001868644 & 0.002743616 & 0.001393868 & 0.00302644 & 0.002037374 & 0.003597841 & 0.001691824 & 0.001969592 & 0.00138556 & 0.000755762 & 0.002171961 & 0.002055426 & 0.000540653 & 0.000702644 & 0.000569688 & 0.00265275 & 0.002483968 & 0.005489451 & 0.002142504 & 0.002214016 & 0.00275912 & 0.00295728 & 0.0016790076 & 0.0048298236 & 0.0058628076 & 0.0031208611 & 0.002397471 & 0.002059499 & 0.00306336224 & 0.00585430872 & 0.00664437232 & \\
+\hline
+Nuclear (quad Btu) &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \\
+\hline
+Renewables and other (quad Btu) & 0.00257622481592 & 0.00378398694844 & 0.00495519819462 & 0.0024511642406 & 0.00538704 & 0.006675633 & 0.002580162 & 0.005115729 & 0.001868644 & 0.002743616 & 0.001393868 & 0.00302644 & 0.002037374 & 0.003597841 & 0.001691824 & 0.001969592 & 0.00138556 & 0.000755762 & 0.002171961 & 0.002055426 & 0.000540653 & 0.000702644 & 0.000569688 & 0.00265275 & 0.002483968 & 0.005489451 & 0.002142504 & 0.002214016 & 0.00275912 & 0.00295728 & 0.0016790076 & 0.0048298236 & 0.0058628076 & 0.0031208611 & 0.002397471 & 0.002059499 & 0.00306336224 & 0.00585430872 & 0.00664437232 & \\
+\hline
+\end{tabu}
+
+Now we can see our problem: The name of the country appear as a title
+that is in the same column as the variables names we need. We are
+therefore at this stage unable to pivot our tibble. In order to solve
+this proble we created a new column ``Country'' where we take only one
+row every eights of the first column and the copy it for all the
+variable. Then we deleated the row corresponding at the country name
+that is now store in the column ``Country'' and obtain something like
+this:
+
+Now we are finally able to pivot our tibble to have a tidy dataset
+usable for the rest of our analysis:
+
+\begin{tabu} to \linewidth {>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X}
+\hline
+Country & Year &     Production (quad Btu) &         Coal (quad Btu) &         Natural gas (quad Btu) &         Petroleum and other liquids (quad Btu) &         Nuclear, renewables, and other (quad Btu) &             Nuclear (quad Btu) &             Renewables and other (quad Btu)\\
+\hline
+World & 1980 & 296.21435254624544 & 79.9919425299794 & 54.761045594 & 133.11110886607943 & 28.350255556186585 & 7.575700462108056 & 20.77455509407853\\
+\hline
+World & 1981 & 291.2691434621497 & 80.44275739096139 & 55.573536747 & 125.4389494908981 & 29.81389983329021 & 8.527153469041346 & 21.286746364248867\\
+\hline
+World & 1982 & 290.16459397739266 & 83.44334341199846 & 55.495522664 & 119.76280547269802 & 31.46292242869618 & 9.50768642751678 & 21.9552360011794\\
+\hline
+World & 1983 & 293.0884301960975 & 83.72816748576506 & 56.115951591 & 119.26919636784994 & 33.97511475148248 & 10.718344095623602 & 23.25677065585888\\
+\hline
+World & 1984 & 308.88419722061724 & 87.63254400981725 & 61.758597532 & 122.55382660121982 & 36.93922907758015 & 12.994607878980153 & 23.9446211986\\
+\hline
+World & 1985 & 316.3867487746443 & 91.60218713955003 & 64.124522824 & 121.1347896143825 & 39.52524919671177 & 15.298615144911766 & 24.2266340518\\
+\hline
+World & 1986 & 326.69952978342883 & 93.99118261682449 & 65.3286482 & 126.54884517346557 & 40.830853793138765 & 16.247905140338766 & 24.5829486528\\
+\hline
+\end{tabu}
+
+\hypertarget{population-growth-data}{%
+\subsection{Population Growth Data}\label{population-growth-data}}
+
+\begin{tabu} to \linewidth {>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedleft}X}
+\hline
+Country & NA & Year & PopulationGrowth\\
+\hline
+Aruba & NA & 2000 & 2.065\\
+\hline
+Aruba & NA & 2001 & 2.205\\
+\hline
+Aruba & NA & 2002 & 2.236\\
+\hline
+Aruba & NA & 2003 & 2.108\\
+\hline
+Aruba & NA & 2004 & 1.765\\
+\hline
+Aruba & NA & 2005 & 1.292\\
+\hline
+Aruba & NA & 2006 & 0.799\\
+\hline
+\end{tabu}
+
+\hypertarget{openness-to-trade-data}{%
+\subsection{Openness to Trade Data}\label{openness-to-trade-data}}
+
+\begin{tabu} to \linewidth {>{\raggedright}X>{\raggedleft}X>{\raggedleft}X}
+\hline
+Country & Year & Ratio.of.exports.and.imports.to.GDP......PWT.9.1..2019..\\
+\hline
+Afghanistan & 2000 & 109.2\\
+\hline
+Afghanistan & 2001 & 109.4\\
+\hline
+Afghanistan & 2002 & 89.4\\
+\hline
+Afghanistan & 2003 & 128.7\\
+\hline
+Afghanistan & 2004 & 110.0\\
+\hline
+Afghanistan & 2005 & 99.6\\
+\hline
+Afghanistan & 2006 & 94.4\\
+\hline
+\end{tabu}
+
+\hypertarget{soybeans-dataset}{%
+\subsection{Soybeans dataset}\label{soybeans-dataset}}
+
+\begin{tabu} to \linewidth {>{\raggedright}X>{\raggedleft}X>{\raggedleft}X}
+\hline
+Country & Year & Gross Production Value Soybeans\\
+\hline
+Albania & 2000 & 292\\
+\hline
+Albania & 2001 & 389\\
+\hline
+Albania & 2002 & 200\\
+\hline
+Albania & 2003 & 287\\
+\hline
+Albania & 2004 & 272\\
+\hline
+Albania & 2005 & 491\\
+\hline
+Albania & 2006 & 285\\
+\hline
+\end{tabu}
+
+\hypertarget{merged-data}{%
+\subsection{Merged Data}\label{merged-data}}
+
+\begin{tabu} to \linewidth {>{\raggedright}X>{\raggedright}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedright}X>{\raggedleft}X>{\raggedleft}X>{\raggedleft}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X}
+\hline
+Country & Year & AgriLand & Change agricultural land & Change agricultural land \% & Agricultural raw materials exports (\% of merchandise exports) & Food exports (\% of merchandise exports) & ForestArea & Deforestation & Deforestation \% & Land Area in sq km & NA & PopulationGrowth & Gross Production Value Soybeans & Ratio.of.exports.and.imports.to.GDP......PWT.9.1..2019.. &     Production (quad Btu) &         Coal (quad Btu) &         Natural gas (quad Btu) &         Petroleum and other liquids (quad Btu) &         Nuclear, renewables, and other (quad Btu) &             Nuclear (quad Btu) &             Renewables and other (quad Btu)\\
+\hline
+Albania & 2000 & 41.8 & NA & NA & 5.97 & 6.63 & 28.1 & NA & NA & 27400 & NA & -0.637 & 292 & 63.5 & 0.06083183808831241 & 0.00027988058460877126 & 0.0011060658 & 0.01305174370370364 & 0.046394148 &  & 0.046394148\\
+\hline
+Albania & 2001 & 41.6 & 0.182 & 0.437 & 5.54 & 5.79 & 28.1 & -0.047 & -0.166 & 27400 & NA & -0.938 & 389 & 66.5 & 0.05136107356866748 & 0.00019591640922613987 & 0.0011060658 & 0.013697264359441338 & 0.036361827 &  & 0.036361827\\
+\hline
+Albania & 2002 & 41.6 & -0.036 & -0.088 & 6.52 & 3.56 & 28.2 & -0.047 & -0.166 & 27400 & NA & -0.300 & 200 & 68.5 & 0.051256018118918355 & 0.00013994029230438563 & 0.0011060658 & 0.014638491026613971 & 0.035371521 &  & 0.035371521\\
+\hline
+Albania & 2003 & 40.9 & 0.693 & 1.667 & 5.14 & 5.63 & 28.2 & -0.047 & -0.165 & 27400 & NA & -0.374 & 287 & 67.0 & 0.06891454270953923 & 0.0005411024635769578 & 0.0011060658 & 0.015457749445962277 & 0.051809625 &  & 0.051809625\\
+\hline
+Albania & 2004 & 40.9 & -0.036 & -0.089 & 4.49 & 5.80 & 28.3 & -0.047 & -0.165 & 27400 & NA & -0.418 & 272 & 67.0 & 0.0712884614857991 & 0.0005411024635769578 & 0.0011060658 & 0.015444717222222144 & 0.054196576 &  & 0.054196576\\
+\hline
+Albania & 2005 & 39.3 & 1.642 & 4.011 & 13.94 & 9.77 & 28.3 & -0.047 & -0.165 & 27400 & NA & -0.512 & 491 & 70.9 & 0.07081958154050344 & 0.0004198208769131569 & 0.0011060658 & 0.016109013863590285 & 0.053184681 &  & 0.053184681\\
+\hline
+Albania & 2006 & 40.9 & -1.569 & -3.993 & 13.12 & 7.94 & 28.4 & -0.047 & -0.165 & 27400 & NA & -0.631 & 285 & 74.3 & 0.06845249684266899 & 0.0004198208769131569 & 0.0011060658 & 0.017817641165755828 & 0.049108969 &  & 0.049108969\\
+\hline
+\end{tabu}
+
+\begin{itemize}
+\tightlist
+\item
+  Sources
+\item
+  Description
+\item
+  Wrangling/cleaning
+\item
+  Spotting mistakes and missing data (could be part of EDA too)
+\item
+  Listing anomalies and outliers (could be part of EDA too)
+\end{itemize}
+
+\hypertarget{analysis}{%
+\section{Analysis}\label{analysis}}
+
+\begin{itemize}
+\tightlist
+\item
+  Answers to the research questions
+\item
+  Different methods considered
+\item
+  Competing approaches
+\item
+  Justifications
+\end{itemize}
+
+\hypertarget{conclusion}{%
+\section{Conclusion}\label{conclusion}}
+
+\begin{itemize}
+\item
+  Take home message
+\item
+  Limitations
+\item
+  Future work?
+
+  , `eda.Rmd'
+\end{itemize}
+
+\end{document}

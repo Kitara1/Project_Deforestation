@@ -1,0 +1,27 @@
+# Conclusion
+
+To conclude our report we will quickly go through our main steps and results and explain how it could have been improved. 
+
+The main goal of our research was to identify which countries were the most impacted by deforestation, how this differs through time and then detect the possible causes of deforestation not only in a specific region but generally around the globe. For this purpose we used different data sets coming from different sources: the FAO, data.worldbank, ourworldindata and the eia. In each of them we had a deep look into what could be the potential causes of deforestation, selecting then our variables from this data. In order to use this variable we tidied all our data sets and merged them in a single one.
+
+Then we had a deeper look at our data. Exploring their distribution, the extremes values and we managed to map this changes worldwide to visualize better the deforestation. Already in this part we discovered which countries are the most affected by deforestation, like Brazil, Angola, Indonesia, Argentina, Peru, Colombia, Nigeria, Paraguay, Colombia, Zambia and Cambodia. Surprising was the high amount of forest area growth in China and also in India, that was also a problem for the regression we planned to make in the analysis. We verified whether the extremes values we found really faced extreme deforestation (or reforestation) to make sure there was no big mistake in the data we were using. We have also seen that there is a significant positive correlation between deforestation and agricultural land, gas production, petrol production, population growth, production of renewables and soy production and a negative significant correlation between nuclear production and openness to trade. We also discovered some correlation between variables we wanted to use for the regression in our analysis, that was also something we had to take into account.
+
+In the analysis, we tried many different methods and end up showing the four main ones. First the OLS regression, we found it important to show as it is the most common one to analyse and without analyzing it we wouldn't have been sure whether using it or not was good. We were able to verify whether the assumptions were met or not and unfortunately the error term appeared to be heteroskedastic. In order to deal with it, we used a panel data regression. Nevertheless our results were not completely satisfying as even if the unobservable effect of time was taken into consideration, we had very few significant variables. There could be that an omitted variable was included in the error term. Then by using a balanced model of our data set we end up to very similar result but indicating different extraction causes to deforestation. Finally the result that we had by applying OLS per year was very significant but only for one year. the sign of the resulting coefficient was not in line with our expectation. 
+
+To conclude we have to say that we chose a difficult topic to analyse. Starting from the research of the data sets to all the steps from the tyding to the analysis, this subject reveals to be very challenging. Other studies have been done on this subject but they were mostly using satellites pictures to analyse the deforestation. Chosing the forest in square kilometers to determine the difference from one year to the other to set our deforestation variable first seemed to be a great idea to us. But we completely underestimated the effect of "reforestation" applied by many countries and making their forest growing from one year to the next. This effect bias our analysis as our dependent variable contained two opposite effect in one. An alternative to it would have been to take only the value of the primary forest. As primary forest cannot be replanted it would have been a good way to separate those two effects. The data set we found on primary forest was very weak compare to the one we finally end up chosing, therefore we cannot certify that it would have given better result.
+
+
+# Resources
+
+Arima E.Y, Richards P., Walker R., Caldas M.C. Statistical confirmation of indirect land use change in the Brazilian Amazon. Environmental Research Letters, 6 (2) (2011), p. 7.
+
+Carr D., Davis J., Jankowska M.M, Grant L., Carr A.C., Clark M.: Space versus place in complex human–natural systems: Spatial and multi-level models of tropical land use and cover change (LUCC) in Guatemala.Ecological Modelling, 229 (2012), pp. 64-75.
+
+Ehrhardt-Martinez K., Crenshaw E., Jenkins J.C.: Deforestation and the environmental Kuznets curve: A cross-national investigation of intervening mechanisms. Social Science Quarterly, 83 (1) (2002), pp. 226-243.
+
+W.R. Faria W.R., Almeida A.N: Relationship between openness to trade and deforestation: Empirical evidence from the Brazilian Amazon. Ecological Modelling, 121 (2016), pp. 85-97
+
+National Geographie (2021): Encyclopedia. Deforestation. [online]: Deforestation | National Geographic Society
+
+Pfaff A., Robalino J., Walker R., Aldrich S., Caldas M., Reis E., et al.:Road inv
+

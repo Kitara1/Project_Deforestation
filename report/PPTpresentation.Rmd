@@ -1,0 +1,56 @@
+---
+title: "Deforestation"
+author: "Martina Kofler & Mathieu Maréchal"
+date: "20/12/2021"
+output: powerpoint_presentation
+---
+
+
+
+## Research Question
+
+* Which countries are affected by deforestation?
+* How does this differ by years?
+* What are the causes of deforestation?
+* Which of these causes have the highest effect?
+
+### The potential causes examined
+
+* Amount of agricultural land,
+* Percentage of agricultural raw material exports and food export from merchandise exports
+* Production/Extraction of source of energy
+* Percentage of population growth
+* Openness to trade
+* Soy production 
+
+## Most affected countries
+
+
+
+| Tables        | Are           | Cool  |
+| ------------- |:-------------:| -----:|
+| col 3 is      | right-aligned | $1600 |
+| col 2 is      | centered      |   $12 |
+| zebra stripes | are neat      |    $1 |
+
+
+## Slide with Bullets
+
+
+---------------------------------------------
+                    Estimate   t val.  pvalue
+----------------- ----------  -------- ------
+(Intercept)         -4185.57    -7.24   0.00
+agriland               -0.00    -6.01   0.00
+agriexp              2151.33    10.93   0.00
+foodexp               248.82     8.77   0.00
+pop                   777.35     2.62   0.01
+soy                    -0.00    -2.17   0.03
+gas                 -5379.95   -14.62   0.00
+petrol               1585.33     7.48   0.00
+nuc                  -684.46    -2.57   0.01
+rew                  3189.29   274.76   0.00
+--------------------------------------------
+
+
+

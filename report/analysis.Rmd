@@ -1,0 +1,362 @@
+
+# Analysis
+
+```{r, echo = FALSE, message = FALSE}
+source(here::here("scripts/setup.R"))
+```
+
+## Structure of the analysis
+
+1. Ordinary Least Square regression
+2. Model Selection
+3. Heteroskedasticity
+4. Panel Data Model
+5. Balanced Model
+6. OLS per year
+7. Comparison of the results
+8. Answer to the research question
+
+
+## 1. OLS regression
+
+We can now finally try to run the regression with our initial model. We will first try to run a basic OLS regression with deforestation as our dependent variable; our explanatory variables being : 
+* the agricultural land (agriland)
+* the agricultural export (agriexp)
+* the food exportation (foodexp)
+* the population growth (pop)
+* the soy production (soy)
+* the openness to trade (opentr)
+* and all the extraction of minerals variables:
+** total mineral production (prod)
+** the coal production (coal)
+** the gas production (gas)
+** the petrol production (petrol)
+** the nuclear production (nuc)
+** the renewable production (rew)
+
+All our variables are measured by country and each year. First we will use the "merge" data set. In this sample, the years are going from 1980 to 2017
+
+So here is our first OLS regression of an initial model including almost all variables.
+
+### Intitial model
+
+```{r,message=F,warning=F,echo=FALSE}
+InitialModel = lm(deforest ~ agriland + agriexp + foodexp + pop + soy + opentr + prod + coal + gas + petrol + nuclrew + nuc + rew, 
+                  data = merged)
+summ(InitialModel)
+```
+
+## 2. Model selection
+
+Before proceeding with the model selection, we will comment the result of the OLS regression.
+Our R-squared is quite high which indicated that our model is explaining most of our model, this result is very optimistic and will prove to be unrealistic. In fact, in this first regression, the data are explaining 70.8% of our model. As we included in this first regression all our variable without any selection, it is not so surprising to have a high R-squared.
+
+The dependent variable of our model, deforest, is now negative when the forest area increased from one year to the next and positive when the area of forest decreased, in order to get the deforestation.
+Now we will check at the sign of our estimators to see whether it goes in line with our expectation or not.For example, agriland coefficient is of positive sign, which is intuitively good as we picked this variable to see if the agriculture increases the deforestation. In fact they are all supposed to increase if the deforestation increases and thus, be of positive sign. We notice that the soy production and all the extraction of minerals coefficients are not of the sign expected. This is probably due to the fact that we have the total production as well as the production of each minerals separately. There is then a strong similarity of information and thus a multicolinearity issue.
+
+Multicollinearity problem occurs when two or more variables are strongly correlated one another. The issue comes with the fact that we can therefore not isolate the effect of each variable. For the prediction it doesn't matter much but for the measurement of influence of every factor it matters. We can see it here through a sign of the coefficients that make no sense.
+
+In order to solve this strong multicollinearity issue we need to make a choice on which variable would be the most significant to keep and which we should remove.To measure the similarity of information we will use the VIF indicator:
+
+```{r,message=F,warning=F,echo=FALSE}
+ols_vif_tol(InitialModel)
+```
+The VIF indicates the presence of multicollinearity if it is above 5. We will remove one by one the variables with the strongest VIF. Intuitively the variable "prod" contains all the extraction variables so it is obvious not to use them both in our model. As we want each factor isolated we will first remove prod from the initial model and re-run the VIF indicators.
+
+### Second model
+
+```{r,message=F,warning=F,echo=FALSE}
+SecondModel = lm(deforest ~ agriland + agriexp + foodexp + pop + soy + opentr + coal + gas + petrol + nuclrew + nuc + rew, 
+                  data = merged)
+summ(SecondModel)
+ols_vif_tol(SecondModel)
+```
+Now we notice "nuclrew" to have the highest VIF. Again, not surprising as it contains both "nuc" and "rew" information. We will remove it and re-run
+
+### Third model
+
+```{r,message=F,warning=F,echo=FALSE}
+ThirdModel = lm(deforest ~ agriland + agriexp + foodexp + pop + soy + opentr + coal + gas + petrol + nuc + rew, 
+                  data = merged)
+summ(ThirdModel)
+ols_vif_tol(ThirdModel)
+```
+We now have "agriland" with the highest VIF. By checking the correlation plot we see that "agriland" is mainly correlated with some extraction variables. We will not remove agriland as it is one of the variable we are most interested in. We will then remove "coal" first as it has the second highest VIF.
+
+### Fourth model
+
+```{r,message=F,warning=F,echo=FALSE}
+FourthModel = lm(deforest ~ agriland + agriexp + foodexp + pop + soy + opentr + gas + petrol + nuc + rew, 
+                  data = merged)
+summ(FourthModel)
+ols_vif_tol(FourthModel)
+```
+Removing the coal variable had a significant impact on the R-squared. But now all our VIF indicators are below five. We could have expect a correlation between "agriexp" and "foodexp" but the VIF of both is below 5, so we can keep both of them for the moment. 
+
+However, the "opentr" coefficient isn't significant (large p-value) we will then try to run the regression without it:
+
+### Fifth model
+
+```{r,message=F,warning=F,echo=FALSE}
+FifthModel = lm(deforest ~ agriland + agriexp + foodexp + pop + soy + gas + petrol + nuc + rew,
+                 data = merged)
+summ(FifthModel)
+ols_vif_tol(FifthModel)
+```
+Removing the openness to trade didn't lower the R-squared and the coefficients are all significant at 95% which is great.
+
+Nevertheless, we notice that even after dealing with the multicollinearity, we still have four out of nine of our coefficients are negative (of wrong sign). 
+
+We can try to run the AIC criteria in order to see whether it identifies other variables to delete. 
+```{r,message=F,warning=F,echo=FALSE}
+stepAIC(InitialModel, 
+        direction = "backward", )
+```
+We can see that it does not identify other variables to remove. The AIC criteria doesn't take into account the multicollinearity. Therefore from multiple perspectives we end up chosing the fifth model.
+
+## 3. Heteroskedasticity
+
+Even if we solved the multicollinearity issue and that most of our variables are significant, we still have to check the distribution of our error term to determine whether our model is good or not. 
+
+We will now plot our residuals in order to see whether the fact that we have a panel data impacts or not the independence of our error term. 
+
+```{r,message=F,warning=F,echo=FALSE}
+plot(FifthModel)
+```
+We clearly see a pattern in the error term indicating that it is not independently identically distributed. Our error term is then heteroskedastic. Our first intuition is to think that it comes from the fact that we are measuring a cross-sectional data through time. But in fact it can come from other sources of heteroskedasticity problem like an omitted variable bias. 
+
+To try to solve this problem we are going to use a panel data model.
+
+## 4. Panel Data Model
+
+Now we can further improve our model by taking into account the fact that our variables are observed among different countries over a period of time. Having observations taken over a time period implies a correlated error term among the different observations because of other unobserved factors that are link to the time period, and thus bias our estimators. As we have many variable in the same case we have a strong incentive to use a panel data. 
+
+There are different method to analyse panel data. The "pooling" method will basically give the same results as our previous OLS model and we found it to have problem with heteroskedasticity. We need a model that assumes that not all countries have the same intercept. In our case we are not sure whether to use the "random" or the "fixed effect" model for our panel data. Therefore, we will first run this two regression without any transformation and taking back the model with almost all the variables (third model).
+
+### Comparison fixed vs random effect
+
+```{r,message=F,warning=F,echo=FALSE}
+Panelfe1 = plm(deforest ~ agriland + agriexp + foodexp + pop + soy + opentr + coal + gas + petrol + nuc + rew,
+                data = merged,index= c("Country", "Year"), model="within")
+summary(Panelfe1)
+
+Panelrdm1 = plm(deforest ~ agriland + agriexp + foodexp + pop + soy + opentr + coal + gas + petrol + nuc + rew,
+                data = merged,index= c("Country", "Year"), model="random")
+summary(Panelrdm1)
+```
+
+We can see that agriland, soy are significant in both regression. petrol and opentr are only significant in the fixed effect regression and for the random effect regression rew, coal and foodexp also show to be significant. Both have a similar R-squared.
+
+Just to select which type of model we should go for, we removed all variables that were not significant and a potential source of multicolinerarity. We included the "prod" variable as it includes all the extraction variable. Opentr becomes insignificant when we remove other variable and food exp as well. This model is therefore good to compare both methods. We re-run both regression:
+
+```{r,message=F,warning=F,echo=FALSE}
+Panelfe2 = plm(deforest ~ agriland + soy + prod,
+                data = merged,index= c("Country", "Year"), model="within")
+summary(Panelfe2)
+
+Panelrdm2 = plm(deforest ~ agriland + soy  + prod,
+                data = merged,index= c("Country", "Year"), model="random")
+summary(Panelrdm2)
+```
+By the random effect model you assume that the intercept are different across countries but that this difference is random and cannot be estimate. In the opposite, the fixed effect model assumes that countries don't have the same intercept but that this difference can be estimated. In order to know which model we should use between these two we will use the Hausman test:
+
+```{r,message=F,warning=F,echo=FALSE}
+phtest(Panelfe2,Panelrdm2)
+```
+In fact we can see that the p-value of the Hausman test is very significant. Implying that it is better to use the fixed effect model (model = "within") and that the random effect model is inconsistent.
+
+```{r,message=F,warning=F,echo=FALSE}
+plmtest(Panelfe1,effect="time", type="bp")
+```
+Moreover, by running a Lagrange Multiplier Breusch-Pegan test of our fixed effect panel model, we'll confirm our intuition that countries behave differently in time (as we cannot reject the null hypothesis stating that countries behave differently) to see whether or not we are right to use the panel data model instead of the OLS. We then solved the problem of heteroskedasticity that was in our previous OLS model.
+
+Now we can look deeper on which extraction factor has the most influence on deforestation. We end up selecting the following model as it is the only significant coefficients that we can get. 
+
+### Panel fixed effect model
+
+```{r,message=F,warning=F,echo=FALSE}
+Panelfe3 = plm(deforest ~ agriland + soy  + petrol + rew,
+                data = merged,index= c("Country", "Year"), model="within")
+summary(Panelfe3)
+
+```
+
+We then have different intercept according to the country. The following table shows the different intercept corresponding to its country:
+
+```{r,message=F,warning=F,echo=FALSE}
+
+fixef(Panelfe3) %>%
+  kbl() %>%
+  kable_classic(full_width = T, html_font = "Cambria")%>% 
+  kable_styling(latex_options = "striped")
+```
+We don't forget that those effects are bias from the fact that deforest cannot isolate only the effect of deforestation. 
+
+
+## 5. Panel with a Balanced data set
+
+We will now try to run our regression with the Balanced data set. This data set differs from merged in the sense that it has the complete set of observations for all the years of the interval. Removing then all the "incomplete" countries.
+
+In order to do so we need first to create a balanced data set from our "merged" data set.
+```{r,message=F,warning=F,echo=FALSE}
+BalancedModel = merged[FALSE,]
+for (i in 1:nrow(merged)){
+if (merged[i,2]==1996 && merged[(i+19),2]==2015){
+BalancedModel[(nrow(BalancedModel) + 1):(nrow(BalancedModel)+20),] = merged[i:(i+19),]
+  }
+}
+BalancedModel[1:7,]%>%
+  kbl() %>%
+  kable_classic(full_width = T, html_font = "Cambria")%>% 
+  kable_styling(latex_options = "striped")
+```
+Now that we have it we'll try to run the fixed effect regression using it.
+```{r,message=F,warning=F,echo=FALSE}
+
+FeBalanced = plm(deforest ~ agriland + soy + prod,
+                data =BalancedModel,index= c("Country", "Year"), model="within")
+summary(FeBalanced)
+```
+And by looking deeper into the extraction variable, we end up with this model:
+
+### Balanced model
+
+```{r,message=F,warning=F,echo=FALSE}
+
+FeBalanced = plm(deforest ~ agriland  + soy +  gas + petrol,
+                data =BalancedModel,index= c("Country", "Year"), model="within")
+summary(FeBalanced)
+```
+
+The result of the regression didn't change much from the unbalanced data set. Nevertheless if we are comparing the countries fixed effect, it's better to have a balanced data set. As it compares the same year for all countries:
+
+```{r,message=F,warning=F,echo=FALSE}
+fixef(FeBalanced) %>%
+  kbl() %>%
+  kable_classic(full_width = T, html_font = "Cambria")%>% 
+  kable_styling(latex_options = "striped")
+```
+
+## 6. OLS per year
+
+Another analysis that we can perform in order to compare our results is to apply OLS for one year at a time in order to avoid the heteroskedasticity issue. Here we are going to do this every five years from 1995 until 2015. We will have to make a variable selection for every year. 
+
+For this purpose we will use the AIC criteria. 
+
+### 2000
+
+```{r,message=F,warning=F,echo=FALSE}
+ols2000 <- lm( deforest ~ agriland + agriexp + foodexp + pop + soy + opentr + coal + gas + petrol +rew, data = merged2000)
+
+stepAIC(ols2000, 
+        direction = "backward")
+```
+
+```{r,message=F,warning=F,echo=FALSE}
+ols2000 <- lm( deforest ~ agriland + soy + coal + gas + rew, data = merged2000)
+
+summ(ols2000)
+```
+
+### 2005
+
+```{r,message=F,warning=F,echo=FALSE}
+ols2005 <- lm( deforest ~ agriland + agriexp + foodexp + pop + soy + opentr + coal + gas + petrol +  rew, data = merged2005)
+
+stepAIC(ols2005, 
+        direction = "backward")
+summ(ols2005)
+```
+
+```{r,message=F,warning=F,echo=FALSE}
+ols2005 <- lm( deforest ~ agriland +  soy + coal + gas + rew, data = merged2005)
+
+summ(ols2005)
+```
+
+### 2010
+
+```{r,message=F,warning=F,echo=FALSE}
+ols2010 <- lm( deforest ~ agriland + agriexp + foodexp + pop + soy + opentr + coal + gas + petrol +   rew, data = merged2010)
+summ(ols2010)
+stepAIC(ols2010, 
+        direction = "backward")
+```
+
+```{r,message=F,warning=F,echo=FALSE}
+ols2010 <- lm( deforest ~ agriland +  soy +  petrol + coal, data = merged2010)
+summ(ols2010)
+```
+
+### 2015
+
+```{r,message=F,warning=F,echo=FALSE}
+ols2015 <- lm( deforest ~ agriland + agriexp + foodexp + pop + soy + opentr + coal + gas + petrol +  rew, data = merged2015)
+summ(ols2015)
+stepAIC(ols2015, 
+        direction = "backward")
+```
+
+```{r,message=F,warning=F,echo=FALSE}
+ols2015 <- lm( deforest ~ agriland + soy  + coal + gas + petrol, data = merged2015)
+summ(ols2015)
+
+```
+
+### Resulting coefficients
+
+Now that we have the significant coefficient according to the year, we can compare them. 
+```{r,message=F,warning=F,echo=FALSE}
+plot_summs(ols2000,ols2005,ols2010,ols2015,scale = T,model.names = c("2000","2005", "2010", "2015"))
+```
+This is an important result as it shows only the coefficients that are significant at 95%. By taking the observations only in one year at a time, we avoid the problem of heteroskedasticity that we had before. Taking one model every five years from 2000 to 2015, we applied the AIC criteria to select the variable. Our four models have a good R-squared and have only significant coefficient. We can see that the coefficient doesn't vary much through years (except for coal and agriland) so that is a good point. The goal would have been to have all of them on the positive side but when we remove some then the model becomes unsignificant. The year 2005 seems to be a relevant one to be compared with the pooled version of the panel data (OLS) and the fixed effect model that we obtained.
+
+## 7. Comparison of the Results
+
+Now that we performed all our regression, here is a plot of the coefficients from the main four regression that we made.
+```{r,message=F,warning=F,echo=FALSE}
+plot_summs(FifthModel,ols2005,Panelfe3,FeBalanced,scale = T, model.names = c("OLS","2005","Panel","Balanced"))
+```
+By ploting the coefficient of the three methods used we can see that the models using the fixed effect panel regression are much closer to zero than the OLS ones. They are more realistic as well because their coefficients are positive. We know that the OLS is bias because of its correlated error term so even if it has given a more complete model we have more incentive to consider the panel fixed effect regression to interpret the coefficient and finally answer to our initial research question.
+
+```{r,message=F,warning=F,echo=FALSE}
+a = tidy(FifthModel)
+kable(a, digits=4, caption=
+"Pooling regression (OLS)")
+b = tidy(ols2005)
+kable(b, digits=4, caption=
+"OLS per year")
+c = tidy(Panelfe3)
+kable(c, digits=4, caption=
+"Fixed effects with full sample")
+d = tidy(FeBalanced)
+kable(d, digits=4, caption=
+"Fixed effects with Balanced data")
+```
+
+From this we can see the significance level of the different model. For the four regression all our coefficients are significant at 95% (no p-value above 0.05). We can now compare our R-squared. 
+
+
+| Model         | R-squared     | 
+|:-------------:|:-------------:|
+| OLS model     |     0.524     |
+| OLS2005       |     0.859     |
+| Fixed effect  |     0.434     | 
+| Balanced      |     0.438     |
+
+The R-squared is only very high in the ols2005 model. We can therefore conclude the effect on deforestation that were statistically significant at this year and their weight. The last two models have an Rsquared that is quite low but realistic to the fact that there might be an omitted variable that would explain the model better.
+
+## 8. Answers to the research questions
+
+From the Balanced data set we can first capture the effect of agricultural land on deforestation. According to our results, an increase of 1 square kilometer of the agricultural land implies an increase of deforestation of 0.0027 square kilometers under the same conditions.
+Also if the soy production decreases by one dollar under ceteris paribus the deforestation increases by 0.0007024 sq km and the increase of one quad of gas decreases the deforestation by 747.1629343 sq km. Regarding the model the increase of one quad of petrol leads to an increase of 341.7205498 deforestation in sq km. 
+
+We can make an estimate for the amount of deforestation for a country if we know the amount of agricultural land, soy production in thousand dollar, gas production in quad and petrol production in quad. 
+The estimate amount of deforestation in sq km can be calculated by this formula:
+
+$$
+Deforestation = agriculturalland * 0.0027167 - soyproduction * 0.0007024 + gas * 747.1629343 + petrol *341.7205498
+$$
+Because the velue of the R-squared  is 0.43 with this model we can just explain approximately  43% of observed variation.
+
+

@@ -1,0 +1,849 @@
+# Exploratory data analysis
+
+```{r, echo = FALSE, message = FALSE}
+source(here::here("scripts/setup.R"))
+```
+To get an overview of the variables and their distribution in this table the mean and the median for each of the variable is shown. Additionally we can also see the amount of observations which are not NA values and the proportion of the NA values per variable.
+```{r, echo = FALSE, message = FALSE}
+sumtable(merged,
+         summ=c('notNA(x)',
+                'mean(x)',
+                'median(x)',
+                'propNA(x)'))
+```
+If we look at the mean and the median it tells us something about the distribution of the variable.In a perfectly symmetrical distribution, the mean and the median are the same. If the mean is lower than the median the distribution of data is skewed to the left and if the mean is higher than the median the distribution of the data is skewed to the right.
+
+Because we did not have data for all the countries of the word this are the countries we include in our survey:
+```{r, echo = FALSE, message = FALSE}
+difcountry<- merged[,1]
+difcountry<-difcountry[!duplicated(difcountry)]
+dd2 <- cbind(difcountry[1:17], difcountry[18:34], difcountry[35:51], difcountry[52:68])
+dd2%>%
+  kbl() %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+
+```
+```{r, echo = FALSE, message = FALSE}
+
+Deforestation<-subset(merged, select = c(1,2,9, 10))
+countries<-world
+
+```
+
+```{r, echo = FALSE, message = FALSE}
+
+Deforestation<-subset(merged, select = c(1,2,9, 10))
+countries<-world
+
+countries=subset(countries, select = -c(1))
+```
+
+## Deforestation per country
+
+Now lets have a look at the most important variable in our dataset which shows the amount of deforestation in sq km.
+First we show the affected countries in the year 2017:
+```{r, echo = FALSE, message = FALSE}
+Deforestation2017<-filter(Deforestation, Year == 2017)
+colnames(Deforestation2017)[1] <- "name_long"
+mer<-left_join(countries, Deforestation2017)
+
+facets = c("deforest")
+tmap_mode("view")
+tm_mouse_coordinates()
+tm_shape(mer) + tm_polygons(facets) 
+
+
+```
+
+```{r, echo = FALSE, message = FALSE}
+colnames(Deforestation2017)[1] <- "Country"
+Deforestation2017<-Deforestation2017 %>% arrange(`deforest`)
+Deforestation2017%>%
+  kbl() %>%
+  kable_classic(full_width = T, html_font = "Cambria") %>%
+  scroll_box(width = "500px", height = "200px")
+
+```
+
+In 2017 the countries Brazil, Indonesia, Angola, Paraguay, Colombia, Zambia, Nigeria, Peru and Cambodia are most affected by deforestation while the forest area in China and India enlarged.
+<br>
+3 years before this was the amount of deforestation per country:
+```{r, echo = FALSE, message = FALSE}
+Deforestation2015<-filter(Deforestation, Year == 2015)
+colnames(Deforestation2015)[1] <- "name_long"
+mer<-left_join(countries, Deforestation2015)
+facets = c("deforest")
+tm_shape(mer) + tm_polygons(facets) + 
+  tm_facets(nrow = 1, sync = TRUE)
+
+```
+```{r, echo = FALSE, message = FALSE}
+colnames(Deforestation2015)[1] <- "Country"
+Deforestation2015<-Deforestation2015 %>% arrange(`deforest`)
+Deforestation2015%>%
+  kbl() %>%
+  kable_classic(full_width = T, html_font = "Cambria")%>%
+  scroll_box(width = "500px", height = "200px")
+```
+Already in 2015 Brazil Angola Zambia, Peru, Cambodia, Paraguay, Colombia, Nigeria are most affected by deforestation and the forest area in China and India enlarged. And in 2015 also the forest area of Australia and Indonesia enlarged.
+<br>
+If we again go 5 years more in the past we can see the following countries affected by deforestation:
+```{r, echo = FALSE, message = FALSE}
+Deforestation2010<-filter(Deforestation, Year == 2010)
+colnames(Deforestation2010)[1] <- "name_long"
+mer<-left_join(countries, Deforestation2010)
+facets = c("deforest")
+tm_shape(mer) + tm_polygons(facets) + 
+  tm_facets(nrow = 1, sync = TRUE)
+
+```
+```{r, echo = FALSE, message = FALSE}
+colnames(Deforestation2010)[1] <- "Country"
+Deforestation2010<-Deforestation2010 %>% arrange(`deforest`)
+Deforestation2010%>%
+  kbl() %>%
+  kable_classic(full_width = T, html_font = "Cambria")%>%
+  scroll_box(width = "500px", height = "200px")
+```
+And also in 2010 Brazil, Angola, Paraguay, Cambodia, Zambia, Peru, Nigeria and Colombia are most affected by deforestation and the forest area of India, China and Australia enlarged. In 2010 also Indonesia is affected and Argentina is affected more than the years before by deforestation. 
+<br>
+Having a look at the year 2005 that the map of deforestation:
+```{r, echo = FALSE, message = FALSE}
+Deforestation2005<-filter(Deforestation, Year == 2005)
+colnames(Deforestation2005)[1] <- "name_long"
+mer<-left_join(countries, Deforestation2005)
+facets = c("deforest")
+tm_shape(mer) + tm_polygons(facets) + 
+  tm_facets(nrow = 1, sync = TRUE)
+
+```
+and the table for 2005:
+```{r, echo = FALSE, message = FALSE}
+colnames(Deforestation2005)[1] <- "Country"
+Deforestation2005<-Deforestation2005 %>% arrange(`deforest`)
+Deforestation2005%>%
+  kbl() %>%
+  kable_classic(full_width = T, html_font = "Cambria")%>%
+  scroll_box(width = "500px", height = "200px")
+```
+Also in 2005 year the most affected countries are Brazil, Paraguay, Argentina, Colombia and Indonesia and the forest aria in China and India already anlarged. In 2005 also Australia was affected by deforestation.
+<br>
+This last map shows the deforestation in sq km in the year 2001:
+```{r, echo = FALSE, message = FALSE}
+Deforestation2001<-filter(Deforestation, Year == 2001)
+colnames(Deforestation2001)[1] <- "name_long"
+mer<-left_join(countries, Deforestation2001)
+facets = c("deforest")
+tm_shape(mer) + tm_polygons(facets) + 
+  tm_facets(nrow = 1, sync = TRUE)
+
+```
+
+```{r, echo = FALSE, message = FALSE}
+colnames(Deforestation2001)[1] <- "Country"
+Deforestation2001<-Deforestation2001 %>% arrange(`deforest`)
+Deforestation2001%>%
+  kbl() %>%
+  kable_classic(full_width = T, html_font = "Cambria")%>%
+  scroll_box(width = "500px", height = "200px")
+```
+And already in 2001 Brazil, Paraguay, Argentina, Colombia, Nigeria and Indonesia were the countries which are most affected by deforestation and the forest area in China and India enlarged.
+<br>
+
+Now we have identified th most interesting countries regarding the amount of yearly deforestation and have a deeper look at them.
+
+
+```{r,out.height= "10%", echo = FALSE, message = FALSE}
+merged[,9]=-merged[,9]
+mergedfrom2000=filter(merged, Year>2000)
+merged_most_affected= filter(mergedfrom2000, Country=="Brazil" | Country=="Indonesia" | Country=="Angola" | Country=="Peru" | Country=="Paraguay" | Country=="Colombia" | Country=="Zambia" |  Country=="Nigeria" | Country=="Cambodia" | Country=="Argentina")
+p<-ggplot(data = merged_most_affected, mapping = aes(x = `Year`, y =`deforest`, group=`Country`, text = paste(`Country`,`deforest`), height = 10 , width = 7, 
+  colour=`Country`)) + 
+  ggtitle("Deforestation per country over years") + 
+  ylab("Deforestation in sq km") +
+  theme(plot.title = element_text(hjust = 0.5))+
+geom_line() 
+ggplotly(p, tooltip = "text")
+```
+
+
+The yearly deforestation in Brazil has the highest amount of the world, also if in 2010 the amount decreases to ca. 15000 sq km and in 2017 the yearly amount also decreases to 10402 sq km.
+
+The yearly amount of deforestation in Indonesia increased in 2010 from 1620 sq km to 9262 sq km. In the year 2015 the forest area enlarged by 2439 sq km, but one year later the country was already affected by deforestation of 13220 sq km.
+
+In Angola the yearly amount of deforestation was around 5550 from 2010 to 2017. For the years before 2010 we do not have any data in our dataset.
+
+The yearly deforestation amount in Paraguay increased in 2010 from 3421 to 4142 sq km. In 2015 the amount of deforestation was just 1658 but one year later it was already very high with 3928 sq km.
+
+In Colombia the amount of yearly deforestation decreased in 2010 from around 2000 sq km to 1300 sq km an increased in 2016 again to above 2000 sq km.
+
+In Zambia we can see a increase of the yearly amount of deforestation between the year 2009 and 2010 
+from around 300 to 1800 sq km.
+
+In Nigeria the yearly amount of deforestation was nearly the same in the years from 2001 to 2017.
+
+In Peru the yearly amount of deforestation in the years 2001 to 2009 was around 1200 and from 2010 to 2017 the amount was between 1500 and 1800 sq km.
+
+In Cambodia the yearly amount deforestation decreased between 2009 and 2010 from under 200 sq km to above 3000 sq km and decreased in the year 2015 to around 1500 sq km.
+
+In Argentina the yearly amount of deforestation decreased in 2009 from around 3000 to around 2000 sq km and in 2015 to around 1000 sq km.
+
+Australia was from 2001 to 2009 affected by deforestation of above 2000 sq km each year, from the years 2010 to 2015 the forest area was enlarged but in the years 2016 and 2017 the country was again affected by deforestation even if just by a low extend.
+<br>
+Now we again visualized the distribution of the deforestation variable with a boxplot:
+```{r, echo = FALSE, message = FALSE}
+mergedfilt<- filter(merged, Year==1995 | Year==2000 | Year==2005 | Year==2010 | Year==2015)
+boxplot(mergedfilt$deforest ~ mergedfilt$Year , col=terrain.colors(4), xlab = "Year",
+        ylab = "Deforestation in sq km", main="Deforestation")
+
+```
+We can see that the interquartile range is very small, that is because we have a lot of far away outliers. We also already know which countries most of this this outliers are. The lowest values for example are China, India and in 2010 and 2015 also Australia while the highest values in for example are Brazil, Paraguay and Angola.
+At first we were sceptical about the high increase of China and India but after a research we came across a paper that deals with the subject of the leading role of China and India in the greening of the world.(Chen, 2019)
+To put at the end of the report:
+Chen et al. (2019) China and India lead in greening of the world through land-use management. Nature Sustainability, (2) 122–129.
+In our analysis we are just interested in the absolute amount of deforestation therefore we do not take the percentage of deforestation into account. We know that using the absolute values does not help to exam the deforestation without the dependence to the amount of forest area of the country but we think that the amount of forest area also plays an important role in real word decisions regarding deforestation.
+
+The other problem is that in our variable of interest (deforest) we have two opposite effect included. One is the deforestation and the other is the fact that some countries adopted a Green policy and planted trees in order to reforest their country. Our goal with this regression analysis is to identify the factors of the deforestation. As both effects are included in the same variable (deforest) it will be hard to differentiate them. However we could filter to take into account only the countries that had a positive value of deforestation and set the others equal to zero in order to not lose the total observation.
+```{r, echo = FALSE, message = FALSE}
+for(i in 1:nrow(merged)){
+  if(merged[i,9]<0){
+    merged[i,9]=0
+  }
+}
+merged1995<- filter(merged, Year==1995)
+merged2000<- filter(merged, Year==2000)
+merged2005<- filter(merged, Year==2005)
+merged2010<- filter(merged, Year==2010)
+merged2015<- filter(merged, Year==2015)
+```
+After this data transformation our boxplot looks like this:
+```{r, echo = FALSE, message = FALSE}
+
+mergedfilt<- filter(merged, Year==1995 | Year==2000 | Year==2005 | Year==2010 | Year==2015)
+boxplot(mergedfilt$deforest ~ mergedfilt$Year , col=terrain.colors(4), xlab = "Year",
+        ylab = "Deforestation in sq km", main="Deforestation")
+
+```
+Now we do not have any outliers below the box plot, the outliers above we will keep because this are the observations which are the most interesting ones.
+
+## Distribution of aricultural land
+
+```{r, echo = FALSE, message = FALSE}
+mergedfilt<- filter(merged, Year==1995 | Year==2000 | Year==2005 | Year==2010 | Year==2015)
+boxplot(mergedfilt$agriland ~ mergedfilt$Year , col=terrain.colors(4), xlab = "Year",
+        ylab = "Agricultural Land in sq km", main="Agricultural Land")
+```
+Also the variable agricultural land has a lot of outiers, and in all years the median is lower than the mean because the box plots are located at the bottom of the plot. Between the years we can not see a important change of the agricultural land.  Most of the values are between 0 and 100000 sq km. Now we will have a look at some  outlies with the most difference to the rest of the samples in each year to better understand and proof the values of the data.
+```{r, echo = FALSE, message = FALSE}
+out_agriland=filter(mergedfilt, agriland>100000)
+out_agriland<-out_agriland %>% arrange(desc(`agriland`))
+out_agiland1995=filter(out_agriland, Year==1995)
+
+
+out_agiland1995[1:11,c(1,3)]%>%
+  kbl(caption ="Outliers 1995") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+
+out_agiland2000=filter(out_agriland, Year==2000)
+
+
+out_agiland2000[1:12,c(1,3)]%>%
+  kbl(caption ="Outliers 2000") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+
+out_agiland2005=filter(out_agriland, Year==2005)
+
+
+out_agiland2005[1:11,c(1,3)]%>%
+  kbl(caption ="Outliers 2005") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+
+out_agiland2010=filter(out_agriland, Year==2010)
+
+
+out_agiland2010[1:13,c(1,3)]%>%
+  kbl(caption ="Outliers 2010") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+
+out_agiland2015=filter(out_agriland, Year==2015)
+
+
+out_agiland2015[1:13,c(1,3)]%>%
+  kbl(caption ="Outliers 2015") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+```
+In this tables we see that the outliers are mostly the same and most of this countries we already know well from the exploration of the amount of deforestation. China and India have a high amount of agricultural land and in the same years the forest area of this countries enlarged.
+The countries Colombia, Angola, Nigeria, Argentina, Brazil and Indonesia also have a high amount of agricultural land and were the countries most affected by deforestation.
+Also Australia has a high amount of agricultural land and was eigher affected by deforestation or enlarged its forest area.
+
+
+## Distibution of agricultural raw material export
+
+```{r, echo = FALSE, message = FALSE}
+mergedfilt<- filter(merged, Year==1995 | Year==2000 | Year==2005 | Year==2010 | Year==2015)
+boxplot(mergedfilt$agriexp ~ mergedfilt$Year , col=terrain.colors(4), xlab = "Year",
+        ylab = "Agricultural raw material export in %", main="Agricultural raw material export (% from merchnadise exports)")
+```
+Also the variable agricultural raw material exports has some outiers, and in all years the median is lower than the mean because the box plots are located at the bottom of the plot. Between the years we can not see a important change of the agricultural land.  Most of the values are between 0 and 10 %. Now we will have a look at some  outlies with the most difference to the rest of the samples in each year to better understand and proof the values of the data.
+```{r, echo = FALSE, message = FALSE}
+out_agriexp=filter(mergedfilt, agriexp>10)
+out_agriexp<-out_agriexp %>% arrange(desc(`agriexp`))
+out_agriexp1995=filter(out_agriexp, Year==1995)
+
+
+out_agriexp1995[,c(1,6)]%>%
+  kbl(caption ="Outliers 1995") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+
+out_agriexp2000=filter(out_agriexp, Year==2000)
+
+
+out_agriexp2000[,c(1,6)]%>%
+  kbl(caption ="Outliers 2000") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+
+out_agriexp2005=filter(out_agriexp, Year==2005)
+
+
+out_agriexp2005[,c(1,6)]%>%
+  kbl(caption ="Outliers 2005") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+
+out_agriexp2010=filter(out_agriexp, Year==2010)
+
+
+out_agriexp2010[c(1,6)]%>%
+  kbl(caption ="Outliers 2010") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+
+out_agriexp2015=filter(out_agriexp, Year==2015)
+
+
+out_agriexp2015[,c(1,6)]%>%
+  kbl(caption ="Outliers 2015") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+```
+In this tables we can see that the outliers are mostly the same like Burkina Faso, Cameroon, Uruguay, Ethiopia and Mali.
+<br>
+
+## Distribution of poplutatio growth
+
+```{r, echo = FALSE, message = FALSE}
+mergedfilt<- filter(merged, Year==1995 | Year==2000 | Year==2005 | Year==2010 | Year==2015)
+boxplot(mergedfilt$pop ~ mergedfilt$Year , col=terrain.colors(4), xlab = "Year",
+        ylab = "Population Growth in %", main="Population Growth")
+```
+In this plot we can see that that the median and the mean of this variable is mostly the same because the boxplot is located in the middle of the plot. Between 1995 and 2000 the median of the popluation growth decreased by cs. 0,25 % and the population growth of all the countries is between -2 and 3,5 %. For this variable we do not have any outliers.
+<br>
+
+## Distribution of soy production
+
+```{r, echo = FALSE, message = FALSE}
+mergedfilt<- filter(merged, Year==1995 | Year==2000 | Year==2005 | Year==2010 | Year==2015)
+boxplot(mergedfilt$soy ~ mergedfilt$Year , col=terrain.colors(4), xlab = "Year",
+        ylab = "Soy production in TDollar", main="Soy production")
+```
+The variable soy production  has a lot of outiers, and in all years the median is lower than the mean because the box plots are located at the bottom of the plot. Between the years we can also see that the values of the outliers are growing. Now we will have a look at some  outlies with the most difference to the rest of the samples in each year to better understand and proof the values of the data.
+```{r, echo = FALSE, message = FALSE}
+
+out_soy<-merged %>% arrange(desc(`soy`))
+out_soy1995=filter(out_soy, Year==1995)
+
+
+out_soy1995[1:6,c(1,13)]%>%
+  kbl(caption ="Outliers 1995") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+
+out_soy2000=filter(out_soy, Year==2000)
+
+
+out_soy2000[1:6,c(1,13)]%>%
+  kbl(caption ="Outliers 2000") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+
+out_soy2005=filter(out_soy, Year==2005)
+
+
+out_soy2005[1:5,c(1,13)]%>%
+  kbl(caption ="Outliers 2005") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+
+out_soy2010=filter(out_soy, Year==2010)
+
+
+out_soy2010[1:8,c(1,13)]%>%
+  kbl(caption ="Outliers 2010") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+
+out_soy2015=filter(out_soy, Year==2015)
+
+
+out_soy2015[1:9,c(1,13)]%>%
+  kbl(caption ="Outliers 2015") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+```
+In most of the years the outliers are Brazil, China, Argentina, India, Canada, Paraguay, Indonesia and Uruguay, because these countries produced most soy.
+<br>
+
+## Distribution of openess to trade
+
+```{r, echo = FALSE, message = FALSE}
+mergedfilt<- filter(merged, Year==1995 | Year==2000 | Year==2005 | Year==2010 | Year==2015)
+boxplot(mergedfilt$opentr ~ mergedfilt$Year , col=terrain.colors(4), xlab = "Year",
+        ylab = "Ratio of imports and exports in % of GDP", main="Openess to trade")
+```
+In this plot we can see that the median of tha ratio of imports and exports in percent of the GDP is growing from 1995 to 2005. Than countries ratios of imports and exports are spread bewtween 25 and 150 % of GDP.
+Now we will have a look on the countries with the 10 highest values in each year to get an impression which countries are the most open to trade.
+```{r, echo = FALSE, message = FALSE}
+
+most_open<-mergedfilt %>% arrange(desc(`opentr`))
+most_open1995=filter(most_open, Year==1995)
+
+
+most_open1995[1:10,c(1,14)]%>%
+  kbl(caption ="Countries that are most opened to trade in 1995") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+
+most_open2000=filter(most_open, Year==2000)
+
+
+most_open2000[1:10,c(1,14)]%>%
+  kbl(caption ="Countries that are most opened to trade in 2000") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+  
+most_open2005=filter(most_open, Year==2005)
+
+
+most_open2005[1:10,c(1,14)]%>%
+  kbl(caption ="Countries that are most opened to trade in 2005") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+
+most_open2010=filter(most_open, Year==2010)
+
+
+most_open2010[1:10,c(1,14)]%>%
+  kbl(caption ="Countries that are most opened to trade in  2010") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+
+most_open2015=filter(most_open, Year==2015)
+
+
+most_open2015[1:10,c(1,14)]%>%
+  kbl(caption ="Countries that are most opened to trade in  2015") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+```
+
+We can see that Panama, Suriname, Honduras, Belize, Thailand, Kazakhstan, Hungary, Cambodia, Honduras, Slovenia, Paraguay, Switzerland and Ukraine are in many years under 10 most opended to trade countries.
+<br>
+
+## Distribution of coal production
+
+```{r, echo = FALSE, message = FALSE}
+mergedfilt<- filter(merged, Year==1995 | Year==2000 | Year==2005 | Year==2010 | Year==2015)
+boxplot(mergedfilt$coal ~ mergedfilt$Year , col=terrain.colors(4), xlab = "Year",
+        ylab = "Coal production in quad", main="Coal production")
+```
+The variable coal production  has a lot of outiers, and in all years the median is lower than the mean because the box plots are located at the bottom of the plot. Between the years we can also see that the values of the outliers are growing and that most of the values are near to 0 quad. Now we will have a look at some outlies with the most difference to the rest of the samples in each year to better understand and proof the values of the data.
+```{r, echo = FALSE, message = FALSE}
+
+most_coal<-mergedfilt %>% arrange(desc(`coal`))
+most_coal1995=filter(most_coal, Year==1995)
+
+
+most_coal1995[1:10,c(1,16)]%>%
+  kbl(caption ="Outliers in 1995") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+
+most_coal2000=filter(most_coal, Year==2000)
+
+
+most_coal2000[1:10,c(1,16)]%>%
+  kbl(caption ="Outliers in  2000") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+  
+most_coal2005=filter(most_coal, Year==2005)
+
+
+most_coal2005[1:10,c(1,16)]%>%
+  kbl(caption ="Outliers in  2005") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+
+most_coal2010=filter(most_coal, Year==2010)
+
+
+most_coal2010[1:10,c(1,16)]%>%
+  kbl(caption ="Outliers in 2010") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+
+most_coal2015=filter(most_coal, Year==2015)
+
+
+most_coal2015[1:10,c(1,16)]%>%
+  kbl(caption ="Outliers in 2015") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+```
+
+We can see that the outlierwith the highes production value is every year China. Australia, India, South Africa, Germany, Kazakhstan, Indonesia, Canada, Colombia, Ukraine, Poland are in most of the years outliers with the most difference to the other values. 
+<br>
+
+## Distribution of gas production
+
+```{r, echo = FALSE, message = FALSE}
+mergedfilt<- filter(merged, Year==1995 | Year==2000 | Year==2005 | Year==2010 | Year==2015)
+boxplot(mergedfilt$gas ~ mergedfilt$Year , col=terrain.colors(4), xlab = "Year",
+        ylab = "Gas production in quad", main="Gas production")
+```
+The variable gas production  has a lot of outiers, and in all years the median is lower than the mean because the box plots are located at the bottom of the plot. Most of the values are below 1 quad. Now we will have a look at some outlies with the most difference to the rest of the samples in each year to better understand and proof the values of the data.
+```{r, echo = FALSE, message = FALSE}
+most_gas<-mergedfilt %>% arrange(desc(`gas`))
+most_gas1995=filter(most_gas, Year==1995)
+
+
+most_gas1995[1:2,c(1,17)]%>%
+  kbl(caption ="Outliers in 1995") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+
+most_gas2000=filter(most_gas, Year==2000)
+
+
+most_gas2000[1:4,c(1,17)]%>%
+  kbl(caption ="Outliers in  2000") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+  
+most_gas2005=filter(most_gas, Year==2005)
+
+
+most_gas2005[1:8,c(1,17)]%>%
+  kbl(caption ="Outliers in  2005") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+
+most_gas2010=filter(most_gas, Year==2010)
+
+
+most_gas2010[1:9,c(1,17)]%>%
+  kbl(caption ="Outliers in 2010") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+
+most_gas2015=filter(most_gas, Year==2015)
+
+
+most_coal2015[1:5,c(1,17)]%>%
+  kbl(caption ="Outliers in 2015") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+```
+We can see that in most years the outliers are the countries Canada, Indonesia, Argentina, Mexico, Australia, India and Pakistan. 
+<br>
+
+## Distribution of petrol production
+
+```{r, echo = FALSE, message = FALSE}
+mergedfilt<- filter(merged, Year==1995 | Year==2000 | Year==2005 | Year==2010 | Year==2015)
+boxplot(mergedfilt$petrol ~ mergedfilt$Year , col=terrain.colors(4), xlab = "Year",
+        ylab = "Petrol production in quad", main="petrol production")
+```
+The variable petrol production  has a lot of outiers, and in all years the median is lower than the mean because the box plots are located at the bottom of the plot. Most of the values are below 2 quad. Now we will have a look at some outlies with the most difference to the rest of the samples in each year to better understand and proof the values of the data.
+```{r, echo = FALSE, message = FALSE}
+most_petrol<-mergedfilt %>% arrange(desc(`petrol`))
+most_petrol1995=filter(most_petrol, Year==1995)
+
+
+most_petrol1995[1:5,c(1,18)]%>%
+  kbl(caption ="Outliers in 1995") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+
+most_petrol2000=filter(most_petrol, Year==2000)
+
+
+most_petrol2000[1:9,c(1,18)]%>%
+  kbl(caption ="Outliers in  2000") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+  
+most_petrol2005=filter(most_petrol, Year==2005)
+
+
+most_petrol2005[1:11,c(1,18)]%>%
+  kbl(caption ="Outliers in  2005") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+
+most_petrol2010=filter(most_petrol, Year==2010)
+
+
+most_petrol2010[1:13,c(1,18)]%>%
+  kbl(caption ="Outliers in 2010") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+
+most_petrol2015=filter(most_petrol, Year==2015)
+
+
+most_petrol2015[1:11,c(1,18)]%>%
+  kbl(caption ="Outliers in 2015") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+```
+
+The countries China, Mexico, Canada, Indonesia, Argentina, Brazil, Kazakhstan, Australia, Nigeria, India, Colombia, Angola and Azerbaijan are the outliers in most of the years.
+<br>
+
+## Distibution of nuclear production
+
+```{r, echo = FALSE, message = FALSE}
+mergedfilt<- filter(merged, Year==1995 | Year==2000 | Year==2005 | Year==2010 | Year==2015)
+boxplot(mergedfilt$nuc ~ mergedfilt$Year , col=terrain.colors(4), xlab = "Year",
+        ylab = "Nuclear production in quad", main="Nuclear production")
+```
+The variable nuclear production  has not that much outiers than the other variables, and in all years the median is lower than the mean because the box plots are located at the bottom of the plot. Most of the values are below 2 quad. Now we will have a look at the few outlies in each year to better understand and proof the values of the data.
+```{r, echo = FALSE, message = FALSE}
+
+most_nuc<-mergedfilt %>% arrange(desc(`nuc`))
+most_nuc1995=filter(most_nuc, Year==1995)
+
+
+most_nuc1995[1:2,c(1,20)]%>%
+  kbl(caption ="Outliers in 1995") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+
+most_nuc2000=filter(most_nuc, Year==2000)
+
+
+most_nuc2000[1:2,c(1,20)]%>%
+  kbl(caption ="Outliers in  2000") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+  
+most_nuc2005=filter(most_nuc, Year==2005)
+
+
+most_nuc2005[1:2,c(1,20)]%>%
+  kbl(caption ="Outliers in  2005") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+
+most_nuc2010=filter(most_nuc, Year==2010)
+
+
+most_nuc2010[1:2,c(1,20)]%>%
+  kbl(caption ="Outliers in 2010") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+
+most_nuc2015=filter(most_nuc, Year==2015)
+
+
+most_nuc2015[1,c(1,20)]%>%
+  kbl(caption ="Outliers in 2015") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+```
+`
+The two outlier we can see in all of the years are France and Japan. 
+<br>
+
+## Distribution of production of renewables ant others
+
+```{r, echo = FALSE, message = FALSE}
+mergedfilt<- filter(merged, Year==1995 | Year==2000 | Year==2005 | Year==2010 | Year==2015)
+boxplot(mergedfilt$rew ~ mergedfilt$Year , col=terrain.colors(4), xlab = "Year",
+        ylab = "production of renewables in quad", main="production of renewables")
+```
+The variable renewables production again has some outliers, and in all years the median is lower than the mean because the box plots are located at the bottom of the plot. Most of the values are below 1 quad. Now we will have a look at the outlies in each year to better understand and proof the values of the data.
+```{r, echo = FALSE, message = FALSE}
+
+most_rew<-mergedfilt %>% arrange(desc(`rew`))
+most_rew1995=filter(most_rew, Year==1995)
+
+
+most_rew1995[1:4,c(1,21)]%>%
+  kbl(caption ="Outliers in 1995") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+
+most_rew2000=filter(most_rew, Year==2000)
+
+
+most_rew2000[1:4,c(1,21)]%>%
+  kbl(caption ="Outliers in  2000") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+  
+most_rew2005=filter(most_rew, Year==2005)
+
+
+most_rew2005[1:5,c(1,21)]%>%
+  kbl(caption ="Outliers in  2005") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+
+most_rew2010=filter(most_rew, Year==2010)
+
+
+most_rew2010[1:8,c(1,21)]%>%
+  kbl(caption ="Outliers in 2010") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+
+most_rew2015=filter(most_rew, Year==2015)
+
+
+most_rew2015[1:8,c(1,21)]%>%
+  kbl(caption ="Outliers in 2015") %>%
+  kable_classic(full_width = T, html_font = "Cambria")
+```
+
+Canada, Brazil, China, Japan, India, Germany, Italy and France are the outliers in most of the years. 
+<br>
+
+## Correlation between the different variables
+
+We want to show which factors have influence on the amount of deforestation, therefore we have a look on the correlation coefficients that show if and which correlation is between the deforestation and the other variables we have in our data set. The correlation coefficient of all the variables to each other we can see in this correlation plot.
+
+```{r, echo = FALSE, message = FALSE}
+for (i  in 15:21){
+  merged[,i]=as.numeric(merged[,i])
+}
+
+
+matrix<-data.matrix(merged)
+
+
+cor_sig_obs <- rcorr(matrix)
+cor= cor_sig_obs$r
+corrplot(cor, type="upper")
+```
+We are especially interested in the correlation coefficient between the variable deforestation and all the other variables,which we can see in this table:
+```{r, echo = FALSE, message = FALSE}
+
+cor = round(cor, 2)
+cor[,9] %>%
+  kbl(col.names=rep('deforest')) %>%
+  kable_paper(full_width = T) %>%
+  column_spec(2, color = ifelse(cor[,9] > 0.00, "green", "red"), bold = ifelse(abs(cor[,9]) >= 0.1, T, F))
+
+
+```
+It may be that not all of these correlation coefficients are significant, therefore we show an additional correlation plot that gives us the information if there is a significant correlation between the variables.
+```{r, echo = FALSE, message = FALSE}
+
+sign = cor_sig_obs$P
+sign[is.na(sign)] <- 0.0000
+corrplot(cor,type = "upper", p.mat = sign, sig.level = 0.05)
+```
+
+```{r, echo = FALSE, message = FALSE}
+d1 <- cor[,9]
+d2 <- sign[,9]
+de <- merge(d1, d2, by="row.names", all=TRUE) 
+rownames(d2)  <- NULL
+de %>%
+  kbl(col.names = c("deforest",
+                           "corr",
+                           "sign")) %>%
+  kable_paper(full_width = T) %>%
+  column_spec(2, background  = ifelse(de[,3]<=0.05, (ifelse(de[,2] > 0.00, "lightgreen", "red")), "white"))
+```
+Like we can see in this table there is a significant positive correlation between deforestation and agricultural land, gas production, petrol production, population growth, production of reweables and soy production and a negative significant correlation between nuclear production and openess to trade.
+The significant correlation between deforestation and country is not of interest for us because the variable country is just encoded by alphabetic order and therefore does not give us a lot of information.
+The negative correlation between deforestation and deforestation in percent comes from the transformation of of the deforesation variable from negative to positive values and is for our porpuse not of interest.
+Of course we are also interested in the correlation coefficients between other variables than deforrstation to be aware of multicollinearity problems. This we will cover in the analysis part, because like we can see in the correlation plot there is a significant correlation between agricultural land and soy production, gas production, openess to trade, petrol production, nuclear production and production of reweables. This is also the case for more variables.
+<br>
+
+## Correlation between deforestation and agricultural land 
+
+```{r, echo = FALSE, message = FALSE}
+
+
+ggplot(data = merged, mapping = aes(x = `agriland`, y =`deforest`)) +
+ylab("Deforestation in sq km") +
+xlab("Agricultural land in sq km") +
+geom_point() 
+
+```
+In this plot we can see a light tendency from the left bottom to right above, this shows the low positive correlation between  agriccultural land and deforestation.
+<br>
+
+## Correlation between deforestation and gas production
+
+```{r, echo = FALSE, message = FALSE}
+
+
+ggplot(data = merged, mapping = aes(x = `gas`, y =`deforest`)) +
+ylab("Deforestation in sq km") +
+xlab("gas production in quad") +
+geom_point() 
+
+```
+In this plot we can see a light tendency from the left bottom to right above, this shows the low positive correlation between  agriccultural land and deforestation also if this tendency like also the correlation is very low because we can also see that there are a lot observationsat the right bottom and in the left upper corner. 
+<br>
+
+## Correlation between deforestation and nuclear production
+
+```{r, echo = FALSE, message = FALSE}
+
+
+ggplot(data = merged, mapping = aes(x = `nuc`, y =`deforest`)) +
+ylab("Deforestation in sq km") +
+xlab("Nuclear production in quad") +
+geom_point() 
+
+```
+Between this two variables is a negativ correlation, this correlation is very low therfore it is hard tho show in a scatter plot.
+<br>
+
+## Correlation between deforestation and openess to trade
+
+```{r, echo = FALSE, message = FALSE}
+
+
+ggplot(data = merged, mapping = aes(x = `opentr`, y =`deforest`)) +
+ylab("Deforestation in sq km") +
+xlab("Ratio of imports and exports in % of GDP") +
+geom_point() 
+
+```
+In this plot we can see that there is a light tendency from the left upper corner to the right lower corner, but again the correlation is very low.
+<br>
+
+## Correlation between deforestation and petrol production
+
+```{r, echo = FALSE, message = FALSE}
+
+
+ggplot(data = merged, mapping = aes(x = `petrol`, y =`deforest`)) +
+ylab("Deforestation in sq km") +
+xlab("Petrol production in quad") +
+geom_point() 
+
+```
+In this plot we can see a light tendency from the left lower corner to right upper, this shows the low positive correlation between petrol production and deforestation.
+<br>
+
+## Correlation between deforestation and population growth
+
+```{r, echo = FALSE, message = FALSE}
+
+
+ggplot(data = merged, mapping = aes(x = `pop`, y =`deforest`)) +
+ylab("Deforestation in sq km") +
+xlab("Population growth in %") +
+geom_point() 
+
+```
+Between this two variables is a positive correlation, this correlation is very low therfore it is hard tho show in a scatter plot because we can see that most of the observations are in the lower middle.
+<br>
+
+## Correlation between deforestation and soy production
+
+```{r, echo = FALSE, message = FALSE}
+
+
+ggplot(data = merged, mapping = aes(x = `soy`, y =`deforest`)) +
+ylab("Deforestation in sq km") +
+xlab("Soy production in TDollar") +
+geom_point() 
+
+```
+In this plot we can see a light tendency from the left bottom to right above, this shows the moderate positive correlation between  soy production and deforestation.
+<br>
+
+## Correlation between deforestation and renewables production
+
+```{r, echo = FALSE, message = FALSE}
+
+
+ggplot(data = merged, mapping = aes(x = `rew`, y =`deforest`)) +
+ylab("Deforestation in sq km") +
+xlab("Reweables production in quad") +
+geom_point() 
+
+```
+In this plot we can see a light tendency from the left bottom to right above, this shows the positive correlation between renewables production and deforestation.
